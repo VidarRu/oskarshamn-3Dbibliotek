@@ -44,13 +44,13 @@ export const VYER = {
   },
   studierum: {
     beskrivning: "Studierummen snett uppifran",
-    position: [24.0, 8.0, 41.0],
-    mot: [30.5, 0.0, 34.5]
+    position: [25.0, 7.0, 32.1],
+    mot: [29.5, 0.0, 32.5]
   },
   salen: {
     beskrivning: "Stora salen fran Demokratitorget, blickar mot nordost",
-    position: [4.0, 2.6, 28.0],
-    mot: [18.0, 1.0, 14.0]
+    position: [10.0, 4.0, 25.4],
+    mot: [22.9, 0.5, 9.3]
   },
   barn: {
     beskrivning: "Barnavdelningen, blickar mot blomman i nordvast",
@@ -59,23 +59,28 @@ export const VYER = {
   },
   hanget: {
     beskrivning: "Hanget och Grattan fran vaster",
-    position: [13.0, 3.2, 18.0],
-    mot: [19.5, 0.8, 13.0]
+    position: [14.9, 5.5, 16.3],
+    mot: [19.45, 0.5, 10.0]
   },
   storstil: {
     beskrivning: "Storstil och entre meroppet",
-    position: [17.5, 2.6, 13.0],
-    mot: [19.0, 1.0, 1.0]
+    position: [21.2, 3.0, 5.5],
+    mot: [21.0, 0.8, 0.0]
   },
   fakta: {
     beskrivning: "Mellan faktahyllorna, blickar norrut",
-    position: [33.0, 2.0, 24.0],
-    mot: [33.0, 1.0, 6.0]
+    position: [33.1, 1.8, 17.3],
+    mot: [33.1, 1.0, 3.0]
   },
   romaner: {
     beskrivning: "Romaner och spanning i sydost",
     position: [28.5, 2.6, 26.5],
     mot: [38.0, 0.8, 19.0]
+  },
+  meroppet: {
+    beskrivning: "Entre meroppet med snurrhyllan och sokstationen",
+    position: [15.25, 2.6, 5.8],
+    mot: [15.25, 1.0, 0.5]
   },
   skylt: {
     beskrivning: "Skyltarna over Hanget och Grattan pa nara hall",
