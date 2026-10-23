@@ -10,7 +10,7 @@
 // utan att nagon annan kod behover roras.
 
 import * as THREE from "three";
-import { byggVarld, byggLjus, VAGGHOJD } from "./varld.js";
+import { byggVarld, byggLjus, forberedSnedvaggar, VAGGHOJD } from "./varld.js";
 import { byggFigur, stegaFigur, animeraFigur, animeraFirande, FIGUR_HOJD } from "./figur.js";
 import { skapaHinder, arFri, flytta, paGolv, FIGUR_RADIE } from "./kollision.js";
 import { VYER } from "./vyer.js";
@@ -36,6 +36,7 @@ import { byggFirande } from "./firande.js";
 const KARTFILER = KARTOR.map(fil => `./data/${fil}`);
 const layouter = await Promise.all(KARTFILER.map(fil =>
   fetch(new URL(fil, import.meta.url)).then(svar => svar.json())));
+for (const l of layouter) forberedSnedvaggar(l);
 
 document.title = SIDA.titel;
 const duk = document.getElementById("spelduk");

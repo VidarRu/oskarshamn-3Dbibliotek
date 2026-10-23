@@ -321,33 +321,71 @@ function fonstervagg(v, tema) {
   return g;
 }
 
+/**
+ * Sneda vaggar ("snedvaggar" i kartfilen, med fran, till och tjocklek)
+ * delas har i sma raka bitar som laggs till bland vaggarna. Da behandlar
+ * kollisionen, vagvisningen, lamporna och skyltarna dem som vilka vaggar
+ * som helst. Bitarna ritas inte, den sneda vaggen ritas hel i byggVaggar.
+ * Anropas en gang per kartfil, innan nagot annat byggs.
+ */
+export function forberedSnedvaggar(layout) {
+  for (const s of layout.snedvaggar || []) {
+    const [x1, z1] = s.fran, [x2, z2] = s.till;
+    const t = s.tjocklek ?? 0.2;
+    const antal = Math.max(1, Math.ceil(Math.hypot(x2 - x1, z2 - z1) / 0.1));
+    for (let i = 0; i <= antal; i++) {
+      const x = x1 + (x2 - x1) * i / antal, z = z1 + (z2 - z1) * i / antal;
+      layout.walls.push({ id: `${s.id}_${i}`, del: s.id, x: x - t / 2, z: z - t / 2,
+                          bredd: t, djup: t });
+    }
+  }
+}
+
+/** En sned vagg: en rundad lada fran punkt till punkt, vriden runt lodlinjen. */
+function snedvagg(s, material) {
+  const [x1, z1] = s.fran, [x2, z2] = s.till;
+  const t = s.tjocklek ?? 0.2;
+  const langd = Math.hypot(x2 - x1, z2 - z1);
+  const g = new THREE.Group();
+  g.add(rundLadaMitt(0, 0, langd + t, t, VAGGHOJD, 0, material, 0.1));
+  g.position.set((x1 + x2) / 2, 0, (z1 + z2) / 2);
+  g.rotation.y = Math.atan2(-(z2 - z1), x2 - x1);
+  return g;
+}
+
+function vaggMaterial(v, tema) {
+  // "yta" i kartfilen: "laxrosa" for accentvaggar, "tegel" for tegel.
+  // Utan yta blir vaggen varmvit.
+  if (v.yta === "laxrosa") return mat(tema.laxrosa);
+  if (v.yta === "tegel") {
+    return new THREE.MeshStandardMaterial({
+      map: tegelTextur(tema, Math.max(v.bredd, v.djup)), roughness: 0.9 });
+  }
+  return mat(tema.vagg);
+}
+
 function byggVaggar(layout, tema) {
   const grupp = new THREE.Group();
+  for (const s of layout.snedvaggar || []) grupp.add(snedvagg(s, mat(tema.vagg)));
   for (const v of layout.walls) {
+    if (v.del) continue;                 // bit av en sned vagg
     if (v.fonster) {
       grupp.add(fonstervagg(v, tema));
       continue;
     }
-    // "yta" i kartfilen: "laxrosa" for accentvaggar, "tegel" for tegel.
-    // Utan yta blir vaggen varmvit.
-    let material = mat(tema.vagg);
-    if (v.yta === "laxrosa") material = mat(tema.laxrosa);
-    if (v.yta === "tegel") {
-      material = new THREE.MeshStandardMaterial({
-        map: tegelTextur(tema, Math.max(v.bredd, v.djup)), roughness: 0.9 });
-    }
-    grupp.add(rundLada(v.x, v.z, v.bredd, v.djup, VAGGHOJD, 0, material, 0.1));
+    grupp.add(rundLada(v.x, v.z, v.bredd, v.djup, VAGGHOJD, 0, vaggMaterial(v, tema), 0.1));
   }
 
   // Slutna rum, som toaletterna, blir rundade block med en farglad dorr.
-  // Ett block kan ange var dorrarna sitter ("dorrar" med sida och x, eller
+  // Ett block med "typ": "toalett" (eller id "toalett") far WC-dorrar.
+  // Det kan ange var dorrarna sitter ("dorrar" med sida och x, eller
   // z for vast och ost, eller en lista med flera sidor), annars fordelas
   // de jamnt over sidan. Block utan dorrar ar personalutrymmen.
   const dorrar = { toalett: { sida: "syd", farg: tema.mint, antal: 2, wc: true } };
   for (const b of layout.blocks) {
     if (b.gangbar) continue;
     grupp.add(rundLada(b.x, b.z, b.bredd, b.djup, VAGGHOJD, 0, mat(tema.vagg), 0.12));
-    const d = dorrar[b.id];
+    const d = dorrar[b.typ || b.id];
     if (!d) continue;
     const sidor = [].concat(b.dorrar || { sida: d.sida });
     for (const s of sidor) {

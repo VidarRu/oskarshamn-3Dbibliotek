@@ -35,10 +35,19 @@ function disk(f, t) {
   g.add(rundLada(f.x + 0.05, f.z + 0.05, f.bredd - 0.1, f.djup - 0.1, f.hojd - 0.06, 0,
                  mat(t.hylla), 0.06));
   g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.07, f.hojd - 0.07, mat(t.bjork), 0.03));
-  for (const dx of [-0.55, 0.55]) {
-    g.add(rundLadaMitt(m.x + dx, m.z + 0.05, 0.5, 0.05, 0.34, f.hojd + 0.12, mat(t.automat), 0.02));
-    g.add(rundLadaMitt(m.x + dx, m.z + 0.02, 0.44, 0.01, 0.28, f.hojd + 0.15, lysande(t.skarm, 0.6), 0.004));
-    g.add(cylinder(m.x + dx, m.z + 0.08, 0.025, 0.14, f.hojd, mat(t.automat), 8));
+  // Skarmarna star langs den langa sidan. "skarmar": false ger en disk utan.
+  if (f.skarmar === false) return g;
+  const langsZ = f.djup > f.bredd;
+  for (const d of [-0.55, 0.55]) {
+    if (langsZ) {
+      g.add(rundLadaMitt(m.x + 0.05, m.z + d, 0.05, 0.5, 0.34, f.hojd + 0.12, mat(t.automat), 0.02));
+      g.add(rundLadaMitt(m.x + 0.02, m.z + d, 0.01, 0.44, 0.28, f.hojd + 0.15, lysande(t.skarm, 0.6), 0.004));
+      g.add(cylinder(m.x + 0.08, m.z + d, 0.025, 0.14, f.hojd, mat(t.automat), 8));
+    } else {
+      g.add(rundLadaMitt(m.x + d, m.z + 0.05, 0.5, 0.05, 0.34, f.hojd + 0.12, mat(t.automat), 0.02));
+      g.add(rundLadaMitt(m.x + d, m.z + 0.02, 0.44, 0.01, 0.28, f.hojd + 0.15, lysande(t.skarm, 0.6), 0.004));
+      g.add(cylinder(m.x + d, m.z + 0.08, 0.025, 0.14, f.hojd, mat(t.automat), 8));
+    }
   }
   return g;
 }
@@ -226,6 +235,14 @@ function stol(f, t) {
 
 function bord(f, t) {
   const g = new THREE.Group();
+  // "rund": true ger ett runt bord pa en enda fot.
+  if (f.rund) {
+    const m = mitt(f), r = Math.min(f.bredd, f.djup) / 2;
+    g.add(cylinder(m.x, m.z, r, 0.06, f.hojd - 0.06, mat(t.bjork), 32));
+    g.add(cylinder(m.x, m.z, 0.05, f.hojd - 0.06, 0, mat(t.hylla), 12));
+    g.add(cylinder(m.x, m.z, r * 0.45, 0.04, 0, mat(t.hylla), 24));
+    return g;
+  }
   g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.06, f.hojd - 0.06, mat(t.bjork), 0.03));
   const ben = mat(t.hylla);
   for (const [dx, dz] of [[0.1, 0.1], [f.bredd - 0.1, 0.1], [0.1, f.djup - 0.1], [f.bredd - 0.1, f.djup - 0.1]]) {
@@ -753,6 +770,145 @@ function sittrappa(f, t) {
   return g;
 }
 
+// ------------------------------------------------------------- vaxter
+
+/** En krukvaxt: en rund kruka och ett moln av runda blad. */
+function vaxt(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const r = Math.min(f.bredd, f.djup) / 2;
+  const slp = slump(f.id);
+  const kruka = Math.min(0.45, f.hojd * 0.3);
+  g.add(cylinder(m.x, m.z, r * 0.55, kruka, 0, mat(t.kruka || t.bjork), 20));
+  g.add(cylinder(m.x, m.z, r * 0.6, 0.06, kruka - 0.06, mat(t.kruka || t.bjork), 20));
+  const blad = [t.vaxt || "#7d8f6a", t.vaxtLjus || "#94a37e"];
+  const klot = (x, y, z, rr, farg) => {
+    const k = new THREE.Mesh(new THREE.SphereGeometry(rr, 16, 12), mat(farg));
+    k.position.set(x, y, z);
+    k.castShadow = k.receiveShadow = true;
+    g.add(k);
+  };
+  klot(m.x, kruka + (f.hojd - kruka) * 0.5, m.z, r * 0.7, blad[0]);
+  for (let i = 0; i < 6; i++) {
+    const v = (i / 6) * Math.PI * 2 + slp();
+    klot(m.x + Math.cos(v) * r * 0.5, kruka + (f.hojd - kruka) * (0.35 + slp() * 0.4),
+         m.z + Math.sin(v) * r * 0.5, r * (0.38 + slp() * 0.12), blad[i % 2]);
+  }
+  return g;
+}
+
+// --------------------------------------------------------- snurrhylla
+
+/** En rund snurrhylla med tre hyllplan och bocker runt kanten. Den star still. */
+function snurrhylla(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const r = Math.min(f.bredd, f.djup) / 2;
+  const slp = slump(f.id);
+  const vit = mat(t.hylla);
+  g.add(cylinder(m.x, m.z, r * 0.9, 0.08, 0, vit, 28));
+  g.add(cylinder(m.x, m.z, 0.06, f.hojd, 0, vit, 12));
+  const plan = 3;
+  for (let p = 0; p < plan; p++) {
+    const y = 0.12 + p * (f.hojd - 0.2) / plan;
+    g.add(cylinder(m.x, m.z, r, 0.03, y, vit, 28));
+    const antal = Math.round(r * 14);
+    for (let i = 0; i < antal; i++) {
+      if (slp() < 0.1) continue;
+      const v = (i / antal) * Math.PI * 2;
+      const h = 0.18 + slp() * 0.1;
+      const bok = rundLadaMitt(0, 0, 0.13, 0.03, h, 0,
+                               mat(t.bocker[Math.floor(slp() * t.bocker.length)]), 0.008);
+      const ring = new THREE.Group();
+      ring.add(bok);
+      ring.position.set(m.x + Math.cos(v) * r * 0.78, y + 0.03, m.z + Math.sin(v) * r * 0.78);
+      ring.rotation.y = -v + Math.PI / 2;
+      // Lutar lite bakat, med framsidan utat.
+      bok.rotation.x = -0.15;
+      g.add(ring);
+    }
+  }
+  return g;
+}
+
+// ---------------------------------------------------------- exponering
+
+/** Ett litet vitt exponeringsbord med nagra bocker som star med framsidan ut. */
+function exponering(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const slp = slump(f.id);
+  g.add(rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(t.hylla), 0.06));
+  const sida = Math.min(f.bredd, f.djup);
+  for (const [dx, dz, vrid] of [[-0.18, -0.08, 0.5], [0.16, 0.1, -0.7], [0.05, -0.2, 2.2]]) {
+    const bok = new THREE.Group();
+    const b = rundLadaMitt(0, 0, 0.2, 0.03, 0.27, 0, mat(t.bocker[Math.floor(slp() * t.bocker.length)]), 0.008);
+    b.rotation.x = -0.25;
+    bok.add(b);
+    bok.position.set(m.x + dx * sida, f.hojd, m.z + dz * sida);
+    bok.rotation.y = vrid;
+    g.add(bok);
+  }
+  return g;
+}
+
+// ------------------------------------------------------------- blomma
+
+/** En lag, mjuk sittdyna formad som en blomma, med kronblad runt en mitt. */
+function blomma(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const r = Math.min(f.bredd, f.djup) / 2;
+  const kronblad = 6;
+  const farg = mat(t.blomma || t.bjork);
+  for (let i = 0; i < kronblad; i++) {
+    const v = (i / kronblad) * Math.PI * 2;
+    g.add(cylinder(m.x + Math.cos(v) * r * 0.58, m.z + Math.sin(v) * r * 0.58, r * 0.4,
+                   f.hojd, 0, farg, 24));
+  }
+  g.add(cylinder(m.x, m.z, r * 0.5, f.hojd + 0.04, 0, mat(t.senap), 24));
+  return g;
+}
+
+// -------------------------------------------------------------- banken
+
+/** En lag trabank: en bjorkskiva pa en vit sockel. */
+function bank(f, t) {
+  const g = new THREE.Group();
+  g.add(rundLada(f.x + 0.05, f.z + 0.05, f.bredd - 0.1, f.djup - 0.1, f.hojd - 0.06, 0, mat(t.hylla), 0.04));
+  g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.06, f.hojd - 0.06, mat(t.bjork), 0.03));
+  return g;
+}
+
+// -------------------------------------------------------- spiraltrappa
+
+/**
+ * En spiraltrappa runt en pelare, som slingrar sig upp mot taket. Den gar
+ * till en vaning som inte finns i kartan och gar inte att kliva upp i.
+ * "steg" ar antalet trappsteg, "varv" hur langt den vrider sig.
+ */
+function spiraltrappa(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const r = Math.min(f.bredd, f.djup) / 2;
+  const n = f.steg || 16;
+  const varv = f.varv || 0.85;
+  const steg = mat("#8f8b86");
+  g.add(cylinder(m.x, m.z, 0.08, f.hojd, 0, mat(t.hylla), 16));
+  for (let i = 0; i < n; i++) {
+    const v = (i / n) * varv * Math.PI * 2;
+    const del = new THREE.Group();
+    del.add(rundLadaMitt(r / 2, 0, r - 0.02, r * 2 * Math.PI * varv / n + 0.06, 0.06, 0, steg, 0.02));
+    del.position.set(m.x, (f.hojd * (i + 1)) / n - 0.06, m.z);
+    del.rotation.y = -v;
+    g.add(del);
+    // En tunn ribba i racket vid varje steg.
+    g.add(cylinder(m.x + Math.cos(v) * (r - 0.05), m.z + Math.sin(v) * (r - 0.05), 0.015,
+                   0.9, (f.hojd * (i + 1)) / n, mat(t.bjork), 6));
+  }
+  return g;
+}
+
 // -------------------------------------------------------- pendellampor
 
 let lampGeo = null;
@@ -820,6 +976,12 @@ export function byggMobel(f, t, alla) {
     case "nodutgang": return nodutgang(f, t);
     case "pentry": return pentry(f, t);
     case "sittrappa": return sittrappa(f, t);
+    case "vaxt": return vaxt(f, t);
+    case "snurrhylla": return snurrhylla(f, t);
+    case "exponering": return exponering(f, t);
+    case "blomma": return blomma(f, t);
+    case "bank": return bank(f, t);
+    case "spiraltrappa": return spiraltrappa(f, t);
     default: return rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(t.hylla), 0.06);
   }
 }

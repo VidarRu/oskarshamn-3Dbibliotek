@@ -9,17 +9,18 @@
 //   * avdelning: true  = räknas som avdelning i minispelet
 //     avdelning: false = övrig plats, syns i listan men räknas inte
 //   * plan: 1 = platsen ligger på plan 1. Utan plan ligger den på plan 0.
-//     Platsen måste också finnas i den våningens kartfil.
+//     Platsen måste också finnas i den våningens kartfil. Oskarshamn har
+//     bara plan 0.
 //   * Ordningen här är ordningen i listan på sidan.
 //   * farg är zonens färg på golvet och kanten på skylten, skriven som
-//     en färgkod. Håll dig till lugna nyanser: beige, brunt och mörkrött.
+//     en färgkod. Håll dig till lugna nyanser: salvia, oliv, beige och tegelrött.
 //     Starka färger gör kartan plottrig.
 //
 //  Spara filen och ladda om sidan för att se ändringen.
 // =====================================================================
 
 export const SIDA = {
-  titel: "Västerviks stadsbibliotek",
+  titel: "Oskarshamns stadsbibliotek",
   framme: "Du är framme vid {namn}",
   visarVag: "Följ prickarna till {namn}",
   stangHjalp: "Tryck Esc för att sluta visa vägen",
@@ -30,7 +31,8 @@ export const SIDA = {
   lasUpp: "Läs upp",
   slutaLasa: "Sluta läsa",
 
-  // Våningar
+  // Våningar. Oskarshamn har bara en våning i kartan, men texterna
+  // behövs om en våning till läggs till.
   nuPaPlan: "Du är på plan {plan}",
   vaningUpp: "Upp till plan {plan}",
   vaningNer: "Ner till plan {plan}",
@@ -40,281 +42,214 @@ export const SIDA = {
 
 // Kartfilerna i src/data, en per våning. Den första är entréplanet, där
 // figuren börjar. Varje kartfil har sitt våningsnummer i "meta": { "plan": … }.
-export const KARTOR = ["layout.json", "layout_plan1.json"];
+export const KARTOR = ["layout.json"];
 
 export const PLATSER = [
   // ---------------------------------------------------- avdelningar
   {
-    id: "receptionsdisk",
-    namn: "Receptionsdisken",
+    id: "informationsdisk",
+    namn: "Informationsdisken",
     beskrivning: "Här kan du fråga personalen om allt.",
     avdelning: true,
-    farg: "#a8845c"
+    farg: "#a88b6a"
   },
   {
-    id: "lana_aterlamna",
-    namn: "Låna och återlämna",
+    id: "lana_lamna",
+    namn: "Låna och lämna",
     beskrivning: "Automater där du lånar och lämnar tillbaka själv.",
     avdelning: true,
-    farg: "#8c6b4f"
-  },
-  {
-    id: "utstallningsyta",
-    namn: "Utställningsytan",
-    beskrivning: "Här visas utställningar som byts ut under året.",
-    avdelning: true,
-    farg: "#9a5a4a"
-  },
-  {
-    id: "ungdomshorna",
-    namn: "Ungdomshörnan",
-    beskrivning: "Soffor, böcker och spel för dig som är ung.",
-    avdelning: true,
-    farg: "#7a3b33"
-  },
-  {
-    id: "labbet",
-    namn: "Labbet",
-    beskrivning: "Prova på teknik, skapa och bygg.",
-    avdelning: true,
-    farg: "#6b4a3a"
+    farg: "#8c7a62"
   },
   {
     id: "barnavdelning",
     namn: "Barnavdelningen",
-    beskrivning: "Bilderböcker och barnböcker, och en egen lånedisk.",
+    beskrivning: "Bilderböcker, barnböcker och en blomma att sitta i.",
     avdelning: true,
-    farg: "#b8925f"
+    farg: "#b9a684"
+  },
+  {
+    id: "hanget",
+    namn: "Hänget",
+    beskrivning: "Ungdomsavdelningen. Böcker, ett bord och en soffa för dig som är ung.",
+    avdelning: true,
+    farg: "#7f8a66"
+  },
+  {
+    id: "faktabocker",
+    namn: "Faktaböcker",
+    beskrivning: "Böcker om allt mellan himmel och jord.",
+    avdelning: true,
+    farg: "#8f948a"
+  },
+  {
+    id: "romaner",
+    namn: "Romaner",
+    beskrivning: "Skönlitteratur för vuxna.",
+    avdelning: true,
+    farg: "#6f8a6a"
+  },
+  {
+    id: "storstil",
+    namn: "Storstil, DAISY och lättläst",
+    beskrivning: "Böcker med stor text, talböcker och lättlästa böcker.",
+    avdelning: true,
+    farg: "#a3a08f"
+  },
+  {
+    id: "ljudbocker",
+    namn: "Ljudböcker, filmer och musik",
+    beskrivning: "Böcker att lyssna på, filmer och musik.",
+    avdelning: true,
+    farg: "#93876f"
+  },
+  {
+    id: "biografier",
+    namn: "Biografier",
+    beskrivning: "Berättelser om verkliga människors liv.",
+    avdelning: true,
+    farg: "#9c9281"
+  },
+  {
+    id: "poesi",
+    namn: "Poesi",
+    beskrivning: "Dikter och lyrik.",
+    avdelning: true,
+    farg: "#b07a62"
+  },
+  {
+    id: "oskarshamnssamlingen",
+    namn: "Oskarshamnssamlingen",
+    beskrivning: "Böcker om Oskarshamn och trakten runt omkring.",
+    avdelning: true,
+    farg: "#a46e58"
+  },
+  {
+    id: "dagstidningar",
+    namn: "Dagstidningar",
+    beskrivning: "Dagens tidningar och bord att läsa vid.",
+    avdelning: true,
+    farg: "#a39279"
+  },
+  {
+    id: "demokratitorget",
+    namn: "Demokratitorget",
+    beskrivning: "Information om samhället, och soffor att sitta i.",
+    avdelning: true,
+    farg: "#9a9890"
   },
 
   // ------------------------------------------------- övriga platser
+  {
+    id: "utanfor",
+    namn: "Utanför entrén",
+    beskrivning: "Här börjar du.",
+    avdelning: false,
+    farg: "#c9c1ae"
+  },
   {
     id: "entre",
     namn: "Entré",
     beskrivning: "Här kommer du in.",
     avdelning: false,
-    farg: "#c8b496"
+    farg: "#c9c1ae"
   },
   {
-    id: "scen",
-    namn: "Scenen",
-    beskrivning: "Här hålls föreställningar och evenemang.",
+    id: "meroppet",
+    namn: "Entré meröppet",
+    beskrivning: "Här kommer du in när biblioteket har meröppet.",
     avdelning: false,
-    farg: "#a46a5a"
+    farg: "#b3aa95"
   },
   {
-    id: "talbocker",
-    namn: "Talböcker",
-    beskrivning: "Böcker att lyssna på.",
+    id: "karta",
+    namn: "Du är här",
+    beskrivning: "Här sitter orienteringskartan över biblioteket.",
     avdelning: false,
-    farg: "#b59a78"
-  },
-  {
-    id: "storstil",
-    namn: "Storstil",
-    beskrivning: "Böcker med stor text.",
-    avdelning: false,
-    farg: "#c2ab8a"
-  },
-  {
-    id: "soffgrupp",
-    namn: "Soffgruppen",
-    beskrivning: "Fåtöljer runt ett soffbord, en lugn plats att sitta och läsa.",
-    avdelning: false,
-    farg: "#a8846a"
-  },
-  {
-    id: "godis",
-    namn: "Godisautomat",
-    beskrivning: "Här kan du köpa godis.",
-    avdelning: false,
-    farg: "#9a5a4a"
-  },
-  {
-    id: "reservationer",
-    namn: "Reservationer",
-    beskrivning: "Här hämtar du det du har reserverat.",
-    avdelning: false,
-    farg: "#8c6b4f"
-  },
-  {
-    id: "kopiator",
-    namn: "Utskrifter och kopior",
-    beskrivning: "Kopiatorn där du skriver ut och kopierar.",
-    avdelning: false,
-    farg: "#7d6a5a"
-  },
-  {
-    id: "kaffe",
-    namn: "Kaffe och vatten",
-    beskrivning: "Automat med kaffe och vatten, vid toaletterna.",
-    avdelning: false,
-    farg: "#8c5a3c"
+    farg: "#b07a62"
   },
   {
     id: "toaletter",
-    namn: "Toaletter",
-    beskrivning: "Två toaletter mot salen, och två till från barnavdelningen.",
+    namn: "Toalett",
+    beskrivning: "Toaletten vid entrén.",
     avdelning: false,
-    farg: "#b8ab8c"
+    farg: "#b1ab94"
   },
   {
-    id: "smabarn",
-    namn: "Småbarnsrummet",
-    beskrivning: "Ett lugnt rum för de minsta, med bilderbokstråg.",
+    id: "toalett_mitt",
+    namn: "Toalett",
+    beskrivning: "Toaletten mitt i biblioteket, intill Gråttan.",
     avdelning: false,
-    farg: "#c8a878"
+    farg: "#b1ab94"
   },
   {
-    id: "pentry",
-    namn: "Pentry",
-    beskrivning: "Ett litet kök med bord, innanför småbarnsrummet.",
+    id: "reservationer",
+    namn: "Reserverade böcker",
+    beskrivning: "Här hämtar du det du har reserverat.",
     avdelning: false,
-    farg: "#b59a78"
+    farg: "#8c7a62"
   },
   {
-    id: "hoglasningsrum",
-    namn: "Högläsningsrummet",
-    beskrivning: "Ett rum för sagostunder, med en sittrappa att sitta i.",
+    id: "utskrift",
+    namn: "Utskrift och kopiering",
+    beskrivning: "Här skriver du ut och kopierar.",
     avdelning: false,
-    farg: "#a46a5a"
-  },
-  {
-    id: "barnvagnar",
-    namn: "Barnvagnsparkering",
-    beskrivning: "Här ställer du barnvagnen, strax innanför entrén.",
-    avdelning: false,
-    farg: "#c8b496"
-  },
-  {
-    id: "torget",
-    namn: "Torget",
-    beskrivning: "Utanför entrén. Här börjar du.",
-    avdelning: false,
-    farg: "#c8b496"
-  },
-  {
-    id: "trappa_hiss",
-    namn: "Trappa och hiss",
-    beskrivning: "Upp till plan 1.",
-    avdelning: false,
-    farg: "#bfb2a0"
-  },
-
-  // ------------------------------------------- plan 1, avdelningar
-  {
-    id: "romaner",
-    plan: 1,
-    namn: "Romaner",
-    beskrivning: "Skönlitteratur för vuxna.",
-    avdelning: true,
-    farg: "#7a3b33"
-  },
-  {
-    id: "spanning",
-    plan: 1,
-    namn: "Spänning",
-    beskrivning: "Deckare och thrillers.",
-    avdelning: true,
-    farg: "#8c4a3c"
-  },
-  {
-    id: "klassiker",
-    plan: 1,
-    namn: "Klassiker",
-    beskrivning: "Böcker som har hållit i många år.",
-    avdelning: true,
-    farg: "#a8845c"
-  },
-  {
-    id: "ljudbocker",
-    plan: 1,
-    namn: "Ljudböcker",
-    beskrivning: "Böcker att lyssna på.",
-    avdelning: true,
-    farg: "#6b4a3a"
-  },
-  {
-    id: "biografier",
-    plan: 1,
-    namn: "Biografier",
-    beskrivning: "Berättelser om verkliga människors liv.",
-    avdelning: true,
-    farg: "#8c6b4f"
-  },
-  {
-    id: "serier",
-    plan: 1,
-    namn: "Serier",
-    beskrivning: "Serieböcker och grafiska romaner.",
-    avdelning: true,
-    farg: "#9a5a4a"
-  },
-  {
-    id: "tidningshorna",
-    plan: 1,
-    namn: "Tidningshörnan",
-    beskrivning: "Dagstidningar och tidskrifter i sköna fåtöljer.",
-    avdelning: true,
-    farg: "#b8925f"
-  },
-  {
-    id: "studieyta",
-    plan: 1,
-    namn: "Studieytan",
-    beskrivning: "Långbord där du kan sitta och plugga.",
-    avdelning: true,
-    farg: "#8c6b4f"
+    farg: "#857c70"
   },
   {
     id: "datorer",
-    plan: 1,
-    namn: "Publika datorer",
-    beskrivning: "Datorer och skrivare som alla får använda.",
-    avdelning: true,
-    farg: "#5b4130"
-  },
-  {
-    id: "slaktforskning",
-    plan: 1,
-    namn: "Släktforskning",
-    beskrivning: "Tjustrummet, med material för den som släktforskar.",
-    avdelning: true,
-    farg: "#a46a5a"
-  },
-
-  // --------------------------------------- plan 1, övriga platser
-  {
-    id: "information",
-    plan: 1,
-    namn: "Information",
-    beskrivning: "Disken där du kan fråga om hjälp på plan 1.",
+    namn: "Datorer",
+    beskrivning: "Datorer som alla får använda.",
     avdelning: false,
-    farg: "#a8845c"
+    farg: "#7d7a72"
   },
   {
-    id: "facklitteratur",
-    plan: 1,
-    namn: "Facklitteratur",
-    beskrivning: "Böcker om allt mellan himmel och jord.",
+    id: "tidskrifter",
+    namn: "Tidskrifter",
+    beskrivning: "Tidningar som kommer ut varje vecka eller månad.",
     avdelning: false,
-    farg: "#b59a78"
+    farg: "#a39279"
   },
   {
-    id: "trappa_hiss_plan1",
-    plan: 1,
-    namn: "Trappa och hiss",
-    beskrivning: "Ner till plan 0.",
+    id: "grattan",
+    namn: "Gråttan",
+    beskrivning: "Ett litet rum med egen dörr.",
     avdelning: false,
-    farg: "#bfb2a0"
+    farg: "#7f8a66"
   },
   {
-    id: "toaletter_plan1",
-    plan: 1,
-    namn: "Toaletter",
-    beskrivning: "Två toaletter, mellan studieytan och tidningshörnan.",
+    id: "andra_sprak",
+    namn: "Böcker på andra språk",
+    beskrivning: "Böcker på många olika språk.",
     avdelning: false,
-    farg: "#b8ab8c"
+    farg: "#9c9281"
+  },
+  {
+    id: "spanning",
+    namn: "Spänning",
+    beskrivning: "Deckare och thrillers.",
+    avdelning: false,
+    farg: "#6f7d68"
+  },
+  {
+    id: "serier",
+    namn: "Tecknade serier",
+    beskrivning: "Serieböcker och grafiska romaner.",
+    avdelning: false,
+    farg: "#a88b6a"
+  },
+  {
+    id: "studierum1",
+    namn: "Studierum 1",
+    beskrivning: "Ett rum med ett bord för fyra, där du kan plugga i lugn och ro.",
+    avdelning: false,
+    farg: "#8f948a"
+  },
+  {
+    id: "studierum2",
+    namn: "Studierum 2",
+    beskrivning: "Ett rum med fyra skrivbord, där du kan plugga i lugn och ro.",
+    avdelning: false,
+    farg: "#8f948a"
   }
 ];
 
@@ -322,31 +257,33 @@ export const PLATSER = [
 //  ÖPPETTIDER OCH KONTAKT
 // =====================================================================
 //
-//  Hämtat från bibliotek.vastervik.se den 12 oktober 2026.
-//  Skriv "Stängt" för dagar då biblioteket är stängt.
-//  Ordningen är måndag först, söndag sist.
+//  Hämtat från bibliotekets webbplats (via en sökning) den 23 oktober
+//  2026. Skriv "Stängt" för dagar då biblioteket är stängt.
+//  Ordningen är måndag först, söndag sist. Tiderna är när det finns
+//  personal. Meröppet står i avvikelser nedan.
+//  Telefon och e-post saknas än. Tomma uppgifter visas inte.
 
 export const OPPETTIDER = [
-  { dag: "Måndag",  tid: "10–19" },
-  { dag: "Tisdag",  tid: "10–19" },
-  { dag: "Onsdag",  tid: "10–19" },
-  { dag: "Torsdag", tid: "10–19" },
-  { dag: "Fredag",  tid: "10–17" },
-  { dag: "Lördag",  tid: "10–13" },
-  { dag: "Söndag",  tid: "Stängt" }
+  { dag: "Måndag",  tid: "Stängt" },
+  { dag: "Tisdag",  tid: "10–18" },
+  { dag: "Onsdag",  tid: "10–18" },
+  { dag: "Torsdag", tid: "10–18" },
+  { dag: "Fredag",  tid: "10–18" },
+  { dag: "Lördag",  tid: "10–14" },
+  { dag: "Söndag",  tid: "10–14" }
 ];
 
 export const KONTAKT = {
-  namn:     "Västerviks stadsbibliotek",
-  adress:   "Spötorget 7, 593 30 Västervik",
-  telefon:  "010-35 555 00",
-  epost:    "biblioteket@vastervik.se",
-  hemsida:  "bibliotek.vastervik.se",
-  avvikelser: "Avvikelser kan förekomma, till exempel vid helger. Se hemsidan."
+  namn:     "Oskarshamns stadsbibliotek",
+  adress:   "Kulturhuset, Hantverksgatan 18–20, 572 28 Oskarshamn",
+  telefon:  "",
+  epost:    "",
+  hemsida:  "bibliotek.oskarshamn.se",
+  avvikelser: "Meröppet varje dag 7–22 för dig som har fyllt 18 och har ett meröppetkort med pinkod. Avvikelser kan förekomma, till exempel vid helger. Se hemsidan."
 };
 
 // =====================================================================
-//  INFOPUNKTER – runda gula plattor på golvet i spelet.
+//  INFOPUNKTER – runda plattor på golvet i spelet.
 // =====================================================================
 //
 //  "id" kopplar texten till plattans plats i kartan. Rör inte id.
@@ -357,43 +294,46 @@ export const INFOPUNKTER = [
   {
     id: "info_entre",
     rubrik: "Välkommen!",
-    rader: ["Välkommen till Västerviks stadsbibliotek."],
+    rader: ["Välkommen till Oskarshamns stadsbibliotek i Kulturhuset."],
     visaOppettider: true
   },
   {
-    id: "info_reception",
+    id: "info_karta",
+    rubrik: "Du är här",
+    rader: [
+      "Här sitter en karta över biblioteket på väggen.",
+      "Rakt fram norrut kommer du till Låna och lämna och den stora salen."
+    ]
+  },
+  {
+    id: "info_disk",
     rubrik: "Bibliotekskort och lån",
     rader: [
-      "För att låna behöver du ett bibliotekskort. Ta med legitimation, så hjälper vi dig här.",
-      "Lånetiden är 4 veckor. Om det är kö, och för tv-spel och tidskrifter, är den 2 veckor.",
-      "Är boken utlånad kan du reservera den. Finns den inte här kan vi ofta beställa den från ett annat bibliotek (fjärrlån, 25 kr)."
+      "För att låna behöver du ett bibliotekskort. Ta med legitimation, så hjälper personalen dig här vid informationsdisken.",
+      "Är boken utlånad kan du reservera den. Du hämtar den sedan i hyllan för reserverade böcker."
     ]
   },
   {
     id: "info_automater",
     rubrik: "Låna och lämna själv",
     rader: [
-      "Här lånar och lämnar du tillbaka själv, med ditt bibliotekskort.",
-      "När biblioteket är stängt kan du lämna böcker i bokinkastet.",
-      "Lämnar du tillbaka för sent kostar det 5 kr per vecka för vuxenmedier."
+      "Här lånar och lämnar du tillbaka själv, med ditt bibliotekskort."
     ]
   },
   {
     id: "info_barn",
     rubrik: "För barn och föräldrar",
     rader: [
-      "Barn- och ungdomsböcker har inga förseningsavgifter.",
-      "Vårdnadshavare ansvarar för barnens lån."
+      "Här finns bilderböcker, barnböcker och böcker på andra språk.",
+      "I hörnet i nordväst finns en stor blomma att sitta i."
     ]
   },
   {
-    id: "info_plan1",
-    plan: 1,
-    rubrik: "Välkommen till plan 1",
+    id: "info_meroppet",
+    rubrik: "Meröppet",
     rader: [
-      "Här finns romaner, spänning, facklitteratur, ljudböcker, biografier och serier.",
-      "Vid informationsdisken kan du fråga om hjälp att hitta.",
-      "Datorerna och släktforskningen finns i Tjustrummet längst in åt öster."
+      "Biblioteket har meröppet varje dag mellan 7 och 22. Då finns det ingen personal.",
+      "För att komma in behöver du ha fyllt 18 år, vara låntagare i Oskarshamns kommun och ha en pinkod kopplad till ditt bibliotekskort."
     ]
   }
 ];
@@ -410,10 +350,9 @@ export const RUTOR = {
   instruktionRubrik: "Så går du runt i biblioteket",
   instruktionRader: [
     "Pilarna ↑ och ↓ går framåt och bakåt. Pilarna ← och → vrider figuren.",
-    "Står du på en brun i-platta får du frågan om du vill veta vad platsen är. Du kan också klicka på i-bubblan.",
+    "Står du på en i-platta får du frågan om du vill veta vad platsen är. Du kan också klicka på i-bubblan.",
     "Vid entrédörrarna får du välja vad du vill göra. Gula prickar visar sedan vägen. Gå ut till dörrarna igen för att välja något annat.",
-    "Gå upp på plattan vid trappan för att byta våning.",
-    "I Labbet på plan 0 finns två små spel, om du vill prova.",
+    "I Hänget finns två små spel, om du vill prova.",
     "Tryck på ? eller H för att se det här igen."
   ],
   forstar:      "Jag förstår",
@@ -422,12 +361,12 @@ export const RUTOR = {
   nej:          "Nej",
   infoFraga:    "Vill du veta vad det här är?",
 
-  // Labbet. spelPlats är id för platsen där spelen startar. Skriv null
+  // Spelen. spelPlats är id för platsen där spelen startar. Skriv null
   // om biblioteket inte ska ha spelen, och ta då bort raden om spelen i
   // instruktionRader ovan.
-  spelPlats:    "labbet",
+  spelPlats:    "hanget",
   labbFraga:    "Vill du utmana dig själv lite grann?",
-  labbUnder:    "Här i Labbet kan du prova ett litet spel.",
+  labbUnder:    "Här i Hänget kan du prova ett litet spel.",
   valjSpel:     "Vilket spel vill du prova?",
   ingetSpel:    "Inget spel",
   avsluta:      "Avsluta spelet",
@@ -438,9 +377,9 @@ export const RUTOR = {
 //  BEHOV – hjulet vid entrédörrarna
 // =====================================================================
 //
-//  När figuren kommer fram till skjutdörrarna från torget dyker ett
-//  hjul upp. Pilarna ← och → vrider hjulet och Enter väljer. Sedan
-//  leder gula prickar till platsen.
+//  När figuren kommer fram till entrédörrarna dyker ett hjul upp.
+//  Pilarna ← och → vrider hjulet och Enter väljer. Sedan leder gula
+//  prickar till platsen.
 //
 //   * text   = det som står i hjulet
 //   * mal    = id för platsen prickarna leder till (se PLATSER ovan)
@@ -460,30 +399,28 @@ export const BEHOV = {
   visarVagAnnanVaning: "{namn} finns på plan {plan}. Följ prickarna till trappan.",
 
   val: [
-    { text: "Hitta en bok",            mal: "information",
+    { text: "Hitta en bok",            mal: "informationsdisk",
       framme: "Vid informationsdisken hjälper personalen dig att hitta rätt bok." },
+    { text: "Låna eller lämna böcker", mal: "lana_lamna",
+      framme: "Här lånar och lämnar du själv, med ditt bibliotekskort." },
     { text: "Hämta reserverad bok",    mal: "reservationer",
       framme: "Här i hyllan hämtar du det du har reserverat." },
     { text: "Gå på toaletten",         mal: "toaletter",
-      framme: "Här är toaletterna." },
-    { text: "Sitta och plugga",        mal: "studieyta",
-      framme: "Här på studieytan kan du sitta i lugn och ro och plugga." },
-    { text: "Äta medhavd mat",         mal: "pentry",
-      framme: "I pentryt kan du äta din medhavda mat." },
-    { text: "Köpa fika",               mal: "kaffe",
-      framme: "Här finns kaffe och vatten. Godisautomaten står vid soffgruppen." },
-    { text: "Hitta en plats att amma", mal: "hoglasningsrum",
-      framme: "I högläsningsrummet kan du stänga dörren och amma i lugn och ro." },
-    { text: "Göra en utskrift",        mal: "kopiator",
+      framme: "Här är toaletten. Det finns en till mitt i biblioteket, intill Gråttan." },
+    { text: "Sitta och plugga",        mal: "studierum1",
+      framme: "I studierummen kan du sitta i lugn och ro och plugga." },
+    { text: "Göra en utskrift",        mal: "utskrift",
       framme: "Här skriver du ut och kopierar." },
     { text: "Låna en dator",           mal: "datorer",
       framme: "Här finns datorer som alla får använda." },
-    { text: "Sitta och hänga",         mal: "ungdomshorna",
-      framme: "Ungdomshörnan är till för dig som är ung. Slå dig ner i en soffa!" },
-    { text: "Sitta ner en stund",      mal: "soffgrupp",
-      framme: "Här i soffgruppen kan du sitta ner en stund." },
-    { text: "Läsa en tidning",         mal: "tidningshorna",
-      framme: "Här finns dagstidningar och tidskrifter." },
+    { text: "Hitta barnböcker",        mal: "barnavdelning",
+      framme: "Här är barnavdelningen, med bilderböcker och barnböcker." },
+    { text: "Sitta och hänga",         mal: "hanget",
+      framme: "Hänget är till för dig som är ung. Slå dig ner!" },
+    { text: "Sitta ner en stund",      mal: "demokratitorget",
+      framme: "Här på Demokratitorget kan du sitta ner en stund." },
+    { text: "Läsa en tidning",         mal: "dagstidningar",
+      framme: "Här finns dagens tidningar. Tidskrifterna står en bit bort åt öster." },
     { text: "Bara titta runt",         mal: null }
   ]
 };
@@ -511,7 +448,7 @@ export const MOBIL = {
   utforskaUnder: "Tryck på golvet dit du vill gå",
   under:       "Eller välj en plats, så går figuren dit och visar vägen.",
   utforskaRubrik: "Tryck på golvet dit du vill gå",
-  utforskaRad: "En gul platta vid trappan eller hissen tar dig till den andra våningen.",
+  utforskaRad: "Tryck på en plats på golvet, så går figuren dit.",
   visaMeny:    "Meny",
   paVag:       "På väg till {namn}",
   paVagUnder:  "Följ figuren och de gula prickarna.",
@@ -524,7 +461,7 @@ export const MOBIL = {
 };
 
 // =====================================================================
-//  MINISPEL – "Biblioteksorientering", startas i Labbet
+//  MINISPEL – "Biblioteksorientering", startas i Hänget
 // =====================================================================
 //
 //  Alla platser med avdelning: true räknas. {namn}, {antal} och
@@ -532,7 +469,7 @@ export const MOBIL = {
 
 export const MINISPEL = {
   namn:          "Biblioteksorientering",
-  forklaring:    "Gå till alla avdelningar på båda våningarna.",
+  forklaring:    "Gå till alla avdelningar i biblioteket.",
   rubrik:        "Biblioteksorientering",
   rakning:       "{antal} av {totalt}",
   hittade:       "Du hittade {namn}",
@@ -545,7 +482,7 @@ export const MINISPEL = {
 };
 
 // =====================================================================
-//  BOKJAKT – samla böcker och undvik låntagare, startas i Labbet
+//  BOKJAKT – samla böcker och undvik låntagare, startas i Hänget
 // =====================================================================
 
 export const BOKJAKT = {
@@ -566,8 +503,9 @@ export const BOKJAKT = {
 };
 
 // =====================================================================
-//  TEMA – världens färger. Hämtade ur fotona i material/foton, och
-//  sedan dämpade till en lugn palett: beige, brunt och mörkrött.
+//  TEMA – världens färger. Hämtade ur orienteringskartan från 2025
+//  (salvia, oliv, beige, grått och tegelrött) och dämpade till en lugn
+//  palett.
 // =====================================================================
 //
 //  Färgkoder skrivs som "#rrggbb". Ändra, spara och ladda om sidan.
@@ -575,55 +513,59 @@ export const BOKJAKT = {
 
 export const TEMA = {
   // Himmel och mark runt huset
-  bakgrund:      "#f6efe5",
-  mark:          "#efe6d8",
+  bakgrund:      "#f1f0ea",
+  mark:          "#e5e6dc",
 
   // Golv
-  golv:          "#c9c7c2",   // ljusgrått, som i bokhyllefotot
-  golvMonster:   "#b7b4ae",   // det svaga marmormönstret
-  stengolv:      "#ddd0bb",   // beige plattor i entré och trapphall
-  stengolvFog:   "#c9b9a0",
+  golv:          "#d6d4ce",   // ljusgrått, som kartans bakgrund
+  golvMonster:   "#c6c3bb",   // det svaga marmormönstret
+  stengolv:      "#d9d3c4",   // plattor i entrén och utanför
+  stengolvFog:   "#c4bca9",
 
   // Väggar
-  vagg:          "#fbf6ee",   // varmvitt
-  vaggKant:      "#efe5d6",   // överkanten
-  laxrosa:       "#e6cdb8",   // accentväggar och pelare
-  tegel:         "#c9a46c",   // tegelväggen vid hissen
-  tegelFog:      "#a8865a",
-  morkgra:       "#6d6a66",   // hissväggen
-  glas:          "#a9dbe8",   // fönster och glasväggar, svagt blå
-  tak:           "#b9b2a8",   // taket på plan 0, sett från fönstren på plan 1
-  karm:          "#f7f1e6",   // fönsterkarmar
+  vagg:          "#f8f6f0",   // varmvitt
+  vaggKant:      "#ebe7dc",   // överkanten
+  laxrosa:       "#dccdb6",   // accentväggar, beige
+  tegel:         "#c08a6c",
+  tegelFog:      "#a0715a",
+  morkgra:       "#6d6c68",
+  glas:          "#a9d6dc",   // fönster och glasväggar, svagt blå
+  tak:           "#b9b5ab",
+  karm:          "#f5f3ec",   // fönsterkarmar
 
   // Möbler
-  hylla:         "#fdfbf7",   // vita hyllor
-  bjork:         "#d6b48a",   // björkskivor och räcken
-  automat:       "#2e2c2b",
+  hylla:         "#fbfaf6",   // vita hyllor
+  bjork:         "#d0b997",   // träskivor, beige som borden i kartan
+  automat:       "#2e2d2b",
   skarm:         "#9fb1ad",   // matt skärm
   tv:            "#a7b2b4",
-  scenFond:      "#6b4540",   // dämpad mörkröd ridå
-  ljudvagg:      "#a59a86",   // ljuddämpande skärmar runt studiebåsen
+  scenFond:      "#6b5a48",
+  ljudvagg:      "#9aa38a",   // salviagröna skärmar runt studieplatserna
   lampa:         "#fff3dc",
   lampSken:      "#ffd89a",
+  vaxt:          "#6f8a5e",   // växternas blad
+  vaxtLjus:      "#8ea67a",
+  kruka:         "#b0705a",   // tegelröda krukor
+  blomma:        "#cdb99b",   // blomdynan i barnavdelningen
 
   // Pendellampor hänger över de här platserna (samma id som i listan ovan)
-  lampor: ["receptionsdisk", "ungdomshorna", "storstil", "soffgrupp", "barnavdelning", "entre",
-           "smabarn", "hoglasningsrum",
-           "information", "tidningshorna", "studieyta", "slaktforskning"],
+  lampor: ["informationsdisk", "entre", "hanget", "demokratitorget", "barnavdelning",
+           "poesi", "oskarshamnssamlingen", "dagstidningar", "studierum1", "studierum2",
+           "lana_lamna"],
 
-  // Accentfärger. senap används till i-plattorna och trapplattorna,
-  // så den ska synas, men inte skrika.
-  senap:         "#b9874a",
-  mint:          "#b8ab8c",
-  rosa:          "#b07a6e",
+  // Accentfärger. senap används till i-plattorna, så den ska synas, men
+  // inte skrika. Här är den tegelröd, som i kartan.
+  senap:         "#b0705a",
+  mint:          "#9aab8a",
+  rosa:          "#c49a84",
 
   // Bokryggarna dras slumpvis ur den här listan
-  bocker: ["#7a3b33", "#8c5a3c", "#a8845c", "#5b4130", "#c8ad86",
-           "#e6dccb", "#6b4a3a", "#9a6b4f"],
+  bocker: ["#5f7a5c", "#848c64", "#c7b29a", "#b0705a", "#6b6a66",
+           "#e3dccb", "#476949", "#9a7b5c"],
 
-  // Figuren: mörkröd tröja, så att den syns mot det ljusa golvet
-  figurTroja:    "#8a3a30",
-  figurByxor:    "#5b4130",
+  // Figuren: mörkgrön tröja, så att den syns mot det ljusa golvet
+  figurTroja:    "#476949",
+  figurByxor:    "#4f4a44",
   figurHud:      "#f1d9c0",
   figurHar:      "#5a3d2b"
 };
