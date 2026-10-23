@@ -1,7 +1,8 @@
 # 3D-bibliotek
 
 En 3D-karta över ett folkbibliotek som man går runt i med en liten figur.
-Det här repot gäller Västerviks stadsbibliotek, men tanken är att samma
+Det här repot gäller Oskarshamns stadsbibliotek i Kulturhuset. Motorn är
+densamma som för Västervik (repot 3D-bibliotek), och tanken är att samma
 motor ska användas för en hel serie bibliotek. Allt som är specifikt för
 ett bibliotek ska därför ligga i datafiler, inte i koden.
 
@@ -25,15 +26,16 @@ Det leder till några principer som går före allt annat:
   (`src/dialog.js`).
 - **Dämpad palett.** Starka färger gör kartan plottrig. Utgå från
   kommunens eller bibliotekets grafiska profil, men i dämpade nyanser
-  (Västervik har beige, brunt och mörkrött). Undantag: de gula
-  vägvisningsprickarna och gröna nödutgångsskyltar.
+  (Oskarshamn har salvia, oliv, beige och tegelrött, ur
+  orienteringskartan). Undantag: de gula vägvisningsprickarna och gröna
+  nödutgångsskyltar.
 - **Utgå från besökarens behov**, inte från bibliotekets avdelningar.
   Hjulet vid entrén frågar "Vad vill du göra i dag?" (låna en dator, gå på
   toaletten, hitta en plats att amma, äta medhavd mat …) och gula prickar
   visar sedan vägen, även till en annan våning. Valen i Västervik är ett
   grundförslag som anpassas efter varje bibliotek.
 - **Spel är frivilliga.** Biblioteksorientering och Bokjakten startas bara
-  på en plats man väljer (i Västervik Labbet), efter frågan "Vill du
+  på en plats man väljer (i Oskarshamn Hänget), efter frågan "Vill du
   utmana dig själv lite grann?", ett spel i taget och med en knapp för att
   avsluta. Alla bibliotek behöver inte ha spelen.
 - **Läs upp** finns på infokorten (webbläsarens talsyntes).
@@ -86,7 +88,7 @@ alltid i `src/mobler.js` och `src/former.js` först.
 
 | Fil | Innehåll |
 | --- | --- |
-| `src/data/layout.json`, `layout_plan1.json` | All geometri per våning: väggar, dörrar, hyllor, möbler, zoner, infopunkter, trappor och hiss, startplats |
+| `src/data/layout.json` | All geometri: väggar, dörrar, hyllor, möbler, zoner, infopunkter, startplats. Oskarshamn har en våning |
 | `src/config/content.js` | Alla texter, platser och färger: `SIDA`, `PLATSER`, `OPPETTIDER`, `KONTAKT`, `INFOPUNKTER`, `RUTOR`, `BEHOV`, `MOBIL`, `MINISPEL`, `BOKJAKT`, `TEMA` |
 | `src/vyer.js` | Fasta kameravyer för granskning (`?vy=oversikt`, `?vy=salen` …) |
 | `src/varld.js`, `mobler.js`, `bocker.js`, `former.js` | Bygger 3D-världen ur kartfilen |
@@ -104,7 +106,8 @@ på plan 1.
 - Enhet meter. x växer österut, z söderut, origo i byggnadens nordvästra
   ytterhörn. Håll `meta` i kartfilen (noter om rummen) uppdaterad när
   något ändras.
-- Väggar med `"fonster": true` blir fönsterväggar. `"yta": "laxrosa"` ger
+- Väggar med `"fonster": true` blir fönsterväggar. Sneda väggar ligger i
+  `snedvaggar` med `fran`, `till` och `tjocklek`. `"yta": "laxrosa"` ger
   en accentvägg och `"yta": "tegel"` en tegelvägg. Utan yta blir väggen
   varmvit.
 - Zoner med `"stengolv": true` får stenplattor i stället för vanligt golv,
@@ -114,7 +117,12 @@ på plan 1.
   den hylla i zonen som ligger närmast skyltpunkten.
 - Fåtöljer kan få `"rygg": "norr" | "syd" | "ost" | "vast"`.
 - Möbeltypen `studiebas` (rader, antal, bord) ger studiebås med skärmar.
-- Block (t.ex. toaletter) kan få `"dorrar": {sida, x: [...]}`.
+- Block (t.ex. toaletter) kan få `"dorrar": {sida, x: [...]}`. Ett block
+  med `"typ": "toalett"` får WC-dörrar.
+- Bord kan vara runda (`"rund": true`). En disk med `"skarmar": false` får
+  inga skärmar.
+- Övriga möbeltyper: `vaxt`, `snurrhylla`, `exponering` (litet vitt bord med
+  böcker), `blomma` (en blomformad sittdyna), `bank` och `spiraltrappa`.
 - Dörrar kan ha `"skjutdorrar": true`.
 - En trappa med `"ner": true` kan delas i lopp med `fran`, `fall`,
   `vilplan`, `racke` och `nerMot`. Se trappan vid infodisken på plan 1.
@@ -181,17 +189,17 @@ Fråga mig om det här innan du börjar bygga:
 Stil, principer och motor är desamma i alla bibliotek. Det som byts ut
 står i nästa avsnitt.
 
-## Västervik-specifikt
+## Oskarshamn-specifikt
 
 Det här är det som byts ut när motorn används för ett annat bibliotek:
 
-- Kartfilerna i `src/data`, en per våning: `layout.json` (plan 0) och
-  `layout_plan1.json` (plan 1). Vilka filer som läses står i `KARTOR` i
-  `content.js`, med entréplanet först.
+- Kartfilen i `src/data/layout.json`. Vilka filer som läses står i
+  `KARTOR` i `content.js`, med entréplanet först. Oskarshamn har bara
+  en våning.
 - Allt innehåll i `src/config/content.js`: namn, adress, öppettider,
   platser, färger (`TEMA`), valen i `BEHOV`, var spelen startar
   (`RUTOR.spelPlats`, eller `null` för inga spel).
-- Vyerna i `src/vyer.js`, som har Västerviks koordinater.
+- Vyerna i `src/vyer.js`, som har Oskarshamns koordinater.
 - Titeln i `index.html`. Sidan byter själv till `SIDA.titel` när den
   laddas, men titeln i filen syns innan dess.
 
@@ -199,9 +207,17 @@ Motorn i `src/*.js` ska inte innehålla något om ett visst bibliotek: inga
 id:n för väggar, zoner eller platser och inga koordinater. Behövs något
 sådant, lägg det i kartfilen eller i `content.js` i stället.
 
-Plan 0 är entréplanet med torget, receptionen, barnavdelningen, Labbet och
-ungdomshörnan. Plan 1 har studieytan, tidningshörnan, släktforskningen och
-Tjustrummet. Figuren börjar på torget utanför skjutdörrarna.
+Underlaget är orienteringskartan från 2025. Den har inga mått, så skalan
+är uppskattad (1 punkt i kartan = 3,5 cm, se `meta` i kartfilen). Väggarna
+är lästa ur kartans vektorlinjer. Allt söder om informationsdisken hör
+inte till biblioteket och är ersatt med en vägg.
+
+Figuren börjar utanför huvudentrén i väster, intill toaletten. Därifrån
+går man genom entrén, förbi informationsdisken och norrut genom gången
+förbi Du är här till Låna och lämna och den stora salen. I salen finns
+barnavdelningen i nordväst, Hänget (ungdom) och Gråttan i mitten,
+Storstil och Entré meröppet i norr, faktaböcker och romaner i öster,
+och Poesi, Oskarshamnssamlingen och studierummen i söder.
 
 ## Förslag som inte är gjorda än
 

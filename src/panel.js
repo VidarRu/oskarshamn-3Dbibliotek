@@ -40,9 +40,10 @@ export function infoInnehall(info) {
     del.append(oppettidTabell());
     del.append(el("p", { class: "liten", text: KONTAKT.avvikelser }));
     del.append(el("h4", { text: SIDA.kontaktRubrik }),
-      el("p", { class: "kontakt" },
-        KONTAKT.namn, el("br"), KONTAKT.adress, el("br"),
-        `Telefon ${KONTAKT.telefon}`, el("br"), KONTAKT.epost, el("br"), KONTAKT.hemsida));
+      // Uppgifter som saknas i KONTAKT hoppas over.
+      el("p", { class: "kontakt" }, ...[KONTAKT.namn, KONTAKT.adress,
+        KONTAKT.telefon && `Telefon ${KONTAKT.telefon}`, KONTAKT.epost, KONTAKT.hemsida]
+        .filter(Boolean).flatMap((rad, i) => (i ? [el("br"), rad] : [rad]))));
   }
   return del;
 }
