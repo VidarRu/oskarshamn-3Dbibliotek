@@ -30,7 +30,7 @@ Det leder till några principer som går före allt annat:
   orienteringskartan). Undantag: de gula vägvisningsprickarna och gröna
   nödutgångsskyltar.
 - **Utgå från besökarens behov**, inte från bibliotekets avdelningar.
-  Hjulet vid entrén frågar "Vad vill du göra i dag?" (låna en dator, gå på
+  Hjulet vid entrén (i Oskarshamn vid informationsdisken) frågar "Vad vill du göra i dag?" (låna en dator, gå på
   toaletten, hitta en plats att amma, äta medhavd mat …) och gula prickar
   visar sedan vägen, även till en annan våning. Valen i Västervik är ett
   grundförslag som anpassas efter varje bibliotek.
@@ -108,8 +108,8 @@ på plan 1.
   något ändras.
 - Väggar med `"fonster": true` blir fönsterväggar. Sneda väggar ligger i
   `snedvaggar` med `fran`, `till` och `tjocklek`. `"yta": "laxrosa"` ger
-  en accentvägg och `"yta": "tegel"` en tegelvägg. Utan yta blir väggen
-  varmvit.
+  en accentvägg, `"yta": "tegel"` en tegelvägg och `"yta": "skog"` en
+  målad skog. Utan yta blir väggen varmvit.
 - Zoner med `"stengolv": true` får stenplattor i stället för vanligt golv,
   till exempel entré, torg och trapphall.
 - Hyllor med `"typ": "trag"` blir låga boktråg.
@@ -117,12 +117,28 @@ på plan 1.
   den hylla i zonen som ligger närmast skyltpunkten.
 - Fåtöljer kan få `"rygg": "norr" | "syd" | "ost" | "vast"`.
 - Möbeltypen `studiebas` (rader, antal, bord) ger studiebås med skärmar.
+  `"skarmar": "mork"` ger mörka skärmar och `"dator": true` en dator på
+  varje plats, med skärmen mot `"bak"`.
 - Block (t.ex. toaletter) kan få `"dorrar": {sida, x: [...]}`. Ett block
   med `"typ": "toalett"` får WC-dörrar.
-- Bord kan vara runda (`"rund": true`). En disk med `"skarmar": false` får
-  inga skärmar.
+- Bord kan vara runda (`"rund": true`) eller höga cafébord på en fot
+  (`"enFot": true`). En disk med `"skarmar": false` får inga skärmar.
+- En stol med `"mot": [x, z]` vrids så att den tittar mot den punkten,
+  till exempel publikstolar mot en scen.
+- Pelare med `"form": "fyrkantig"` blir fyrkantiga.
+- En spiraltrappa med `"forstaSteg": "syd"` har sitt nedersta steg mot
+  söder.
+- Föremål med `"gangbar": true` (mattor, tavlor) går att gå över eller
+  förbi.
 - Övriga möbeltyper: `vaxt`, `snurrhylla`, `exponering` (litet vitt bord med
-  böcker), `blomma` (en blomformad sittdyna), `bank` och `spiraltrappa`.
+  böcker), `blomma` (en blomformad sittdyna), `bank` (med `"fack": true`
+  och `"fackMot"` får den fack med lådor) och `spiraltrappa`.
+- `anslagstavla` (affischer på en vägg, vänd åt `riktning`, `y` är
+  höjden där den börjar), `aterlamningsvagn` (svart vagn för böcker),
+  `nyhetshylla` (luftig hylla med omslagen utåt), `spelskap` (fyrsidigt
+  skåp med tv-spel), `trad` (träd med platt krona, `krona` är radien),
+  `matta` och `skarmvagg` (fristående vägg, `"monster": true` ger mörk
+  mönstrad tapet och `"lov": true` ett draperi av löv ovanför).
 - Dörrar kan ha `"skjutdorrar": true`.
 - En trappa med `"ner": true` kan delas i lopp med `fran`, `fall`,
   `vilplan`, `racke` och `nerMot`. Se trappan vid infodisken på plan 1.
@@ -212,12 +228,15 @@ Underlaget är orienteringskartan från 2025. Den har inga mått, så skalan
 är lästa ur kartans vektorlinjer. Allt söder om informationsdisken hör
 inte till biblioteket och är ersatt med en vägg.
 
-Figuren börjar utanför huvudentrén i väster, intill toaletten. Därifrån
-går man genom entrén, förbi informationsdisken och norrut genom gången
-förbi Du är här till Låna och lämna och den stora salen. I salen finns
-barnavdelningen i nordväst, Hänget (ungdom) och Gråttan i mitten,
-Storstil och Entré meröppet i norr, faktaböcker och romaner i öster,
-och Poesi, Oskarshamnssamlingen och studierummen i söder.
+Figuren börjar inne vid informationsdisken, och hjulet dyker upp framför
+disken. Ytterdörren är borttagen. Därifrån går man norrut genom gången
+förbi spiraltrappan, Du är här och anslagstavlan till Låna och lämna och
+den stora salen. I salen finns barnavdelningen i nordväst med Lilla
+skogen i hörnet och Mångspråk för barn och unga närmast dagstidningarna,
+Demokratitorget med en liten scen och fyra datorbås bakom scenväggen i
+sydväst, Hänget (ungdom) och Gråttan i mitten, Storstil och Entré
+meröppet i norr, faktaböcker och romaner i öster, och Poesi,
+Oskarshamnssamlingen och studierummen i söder.
 
 ## Förslag som inte är gjorda än
 

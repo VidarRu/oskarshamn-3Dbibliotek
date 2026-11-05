@@ -1,4 +1,4 @@
-// Hjulet vid entrédörrarna: "Vad vill du göra i dag?"
+// Hjulet vid valplatsen: "Vad vill du göra i dag?"
 //
 // Valen star pa ett hjul som vrids med pilarna vanster och hoger. Valet i
 // mitten ar storst, grannarna blir mindre och svagare ut mot kanterna.

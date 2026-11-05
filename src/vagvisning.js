@@ -36,11 +36,14 @@ const index = (n, x, z) => {
   return r * n.kol + k;
 };
 
-/** Narmaste fria ruta till en punkt, valfritt begransad till en zon. */
-function narmasteFria(n, x, z, plats = null, krav = 2) {
+/**
+ * Narmaste fria ruta till en punkt, valfritt begransad till en zon och
+ * till rutor som gar att na (en lista fran nabara).
+ */
+function narmasteFria(n, x, z, plats = null, krav = 2, tillat = null) {
   let bast = -1, bastAvstand = Infinity;
   for (let i = 0; i < n.fri.length; i++) {
-    if (n.fri[i] < krav) continue;
+    if (n.fri[i] < krav || (tillat && !tillat[i])) continue;
     const cx = mitt(i % n.kol), cz = mitt(Math.floor(i / n.kol));
     if (plats && !iZon(plats, cx, cz)) continue;
     const d = (cx - x) ** 2 + (cz - z) ** 2;
@@ -49,11 +52,34 @@ function narmasteFria(n, x, z, plats = null, krav = 2) {
   return bast;
 }
 
-/** Malet for en plats: fri ruta i zonen narmast skylten. */
-export function malFor(n, plats) {
-  let i = narmasteFria(n, plats.skylt.x, plats.skylt.z, plats);
-  // Zoner som helt tacks av en mobel, till exempel en disk: ga fram till den.
-  if (i < 0) i = narmasteFria(n, plats.skylt.x, plats.skylt.z);
+/** Alla rutor som gar att na fran start utan att ga genom nagot. */
+function nabara(n, start, krav) {
+  const sett = new Uint8Array(n.fri.length);
+  if (start < 0) return sett;
+  const ko = [start];
+  sett[start] = 1;
+  while (ko.length) {
+    const i = ko.pop();
+    const k = i % n.kol, r = Math.floor(i / n.kol);
+    for (const [dk, dr] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nk = k + dk, nr = r + dr;
+      if (nk < 0 || nr < 0 || nk >= n.kol || nr >= n.rad) continue;
+      const j = nr * n.kol + nk;
+      if (sett[j] || n.fri[j] < krav) continue;
+      sett[j] = 1;
+      ko.push(j);
+    }
+  }
+  return sett;
+}
+
+/**
+ * Malet for en plats: den fria ruta i zonen som ligger narmast skylten.
+ * Med tillat raknas bara rutor som gar att na, sa att malet inte hamnar
+ * i en vra bakom mobler dit ingen vag leder.
+ */
+export function malFor(n, plats, krav = 2, tillat = null) {
+  const i = narmasteFria(n, plats.skylt.x, plats.skylt.z, plats, krav, tillat);
   return { x: mitt(i % n.kol), z: mitt(Math.floor(i / n.kol)), i };
 }
 
@@ -161,10 +187,16 @@ function rata(n, punkter, radie) {
  * Ger tillbaka en lista med punkter {x, z}, eller null om ingen vag finns.
  */
 export function hittaVag(n, x, z, plats) {
-  const mal = malFor(n, plats);
-  for (const krav of [2, 1]) {
+  // Forst med marginal, sedan dar figuren precis far plats. Zoner som
+  // helt tacks av en mobel, till exempel en disk: ga fram till den.
+  const forsok = [[2, plats], [1, plats], [2, null], [1, null]];
+  for (const [krav, zon] of forsok) {
     let start = index(n, x, z);
     if (n.fri[start] < krav) start = narmasteFria(n, x, z, null, krav);
+    if (start < 0) continue;
+    const mal = zon ? malFor(n, plats, krav, nabara(n, start, krav))
+                    : { i: narmasteFria(n, plats.skylt.x, plats.skylt.z, null, krav, nabara(n, start, krav)) };
+    if (mal.i < 0) continue;
     const rutor = aStjarna(n, start, mal.i, krav);
     if (!rutor) continue;
     const punkter = rutor.map(i => ({ x: mitt(i % n.kol), z: mitt(Math.floor(i / n.kol)) }));

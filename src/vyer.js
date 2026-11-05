@@ -17,10 +17,10 @@ export const VYER = {
     position: [19.7, 70, 26.5],
     mot: [19.7, 0, 26]
   },
-  utanfor: {
-    beskrivning: "Utanfor entren, blickar in genom dorrarna",
-    position: [-2.5, 5.5, 49.5],
-    mot: [8.0, 0.5, 47.0]
+  start: {
+    beskrivning: "Dar figuren borjar, framfor informationsdisken",
+    position: [11.0, 3.2, 49.2],
+    mot: [19.0, 0.8, 46.5]
   },
   entre: {
     beskrivning: "Innanfor entren, blickar mot informationsdisken",
@@ -81,6 +81,46 @@ export const VYER = {
     beskrivning: "Entre meroppet med snurrhyllan och sokstationen",
     position: [15.25, 2.6, 5.8],
     mot: [15.25, 1.0, 0.5]
+  },
+  scenen: {
+    beskrivning: "Scenen pa Demokratitorget fran publiken",
+    position: [12.5, 4.2, 18.5],
+    mot: [5.0, 0.8, 26.5]
+  },
+  datorbas: {
+    beskrivning: "Datorbasen bakom scenen, blickar vasterut",
+    position: [10.4, 2.6, 27.9],
+    mot: [3.0, 0.6, 27.9]
+  },
+  skogen: {
+    beskrivning: "Lilla skogen i barnavdelningens nordvastra horn",
+    position: [6.8, 3.4, 8.5],
+    mot: [2.0, 1.2, 1.5]
+  },
+  mangsprak: {
+    beskrivning: "Mangsprak for barn och unga och tv-spelsskapet",
+    position: [11.5, 3.2, 20.5],
+    mot: [5.0, 0.8, 14.0]
+  },
+  anslagstavla: {
+    beskrivning: "Anslagstavlan i korridoren, narmast Poesi",
+    position: [14.4, 2.0, 39.0],
+    mot: [16.4, 1.3, 35.4]
+  },
+  automater: {
+    beskrivning: "Automaterna rygg mot rygg och aterlamningsvagnen",
+    position: [17.0, 3.0, 29.5],
+    mot: [20.0, 0.6, 25.5]
+  },
+  nyheter: {
+    beskrivning: "Nyhetshyllan mellan blomkrukorna vid Oskarshamnssamlingen",
+    position: [21.0, 2.4, 26.0],
+    mot: [21.0, 0.8, 30.5]
+  },
+  sokstation: {
+    beskrivning: "Sokstationen vid pelaren, sedd fran Utskrift",
+    position: [12.6, 2.4, 27.4],
+    mot: [13.3, 1.0, 23.4]
   },
   skylt: {
     beskrivning: "Skyltarna over Hanget och Grattan pa nara hall",

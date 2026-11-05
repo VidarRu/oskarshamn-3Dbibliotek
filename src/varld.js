@@ -286,6 +286,62 @@ function tegelTextur(tema, langd) {
   return tex;
 }
 
+let skogBild = null;
+/**
+ * En malad skog, som vaggmalningen i Lilla skogen: stammar, runda kronor
+ * i flera grona toner och nagra sma djur. En bild ar 3,2 meter bred.
+ */
+function skogTextur(tema, langd) {
+  if (!skogBild) {
+    skogBild = document.createElement("canvas");
+    skogBild.width = skogBild.height = 512;
+    const c = skogBild.getContext("2d");
+    const slp = slumpare(7);
+    const mork = tema.skogMork || "#5f7a5c", mellan = tema.vaxt || "#6f8a5e",
+          ljus = tema.vaxtLjus || "#8ea67a", stam = tema.tradStam || "#8a6a4c";
+    c.fillStyle = tema.skogBakgrund || "#cdd3bd";
+    c.fillRect(0, 0, 512, 512);
+    // Bakre raden: hoga, morka trad.
+    for (let i = 0; i < 7; i++) {
+      const x = i * 80 + slp() * 30 - 10;
+      c.fillStyle = stam;
+      c.fillRect(x - 7, 220, 14, 292);
+      c.fillStyle = mork;
+      for (const [dx, dy, r] of [[0, 170, 62], [-38, 210, 44], [40, 205, 46]]) {
+        c.beginPath(); c.arc(x + dx, dy + slp() * 30, r, 0, Math.PI * 2); c.fill();
+      }
+    }
+    // Framre raden: lagre, ljusare buskar och trad.
+    for (let i = 0; i < 6; i++) {
+      const x = i * 96 + 40 + slp() * 30;
+      c.fillStyle = stam;
+      c.fillRect(x - 9, 330, 18, 182);
+      c.fillStyle = i % 2 ? mellan : ljus;
+      c.beginPath(); c.arc(x, 300 + slp() * 30, 58 + slp() * 14, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = mellan;
+    for (let x = -20; x < 532; x += 46) {
+      c.beginPath(); c.arc(x, 486 + slp() * 12, 40, 0, Math.PI * 2); c.fill();
+    }
+    // En uggla och en raev, enkla former.
+    c.fillStyle = tema.bjork || "#d0b997";
+    c.beginPath(); c.ellipse(150, 268, 20, 26, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = "#f7f1e6";
+    for (const dx of [-8, 8]) { c.beginPath(); c.arc(150 + dx, 260, 7, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = "#3b2f27";
+    for (const dx of [-8, 8]) { c.beginPath(); c.arc(150 + dx, 260, 3, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = tema.senap || "#b0705a";
+    c.beginPath();
+    c.moveTo(380, 470); c.lineTo(440, 470); c.lineTo(452, 440); c.lineTo(440, 448);
+    c.lineTo(430, 430); c.lineTo(420, 448); c.lineTo(392, 448); c.closePath(); c.fill();
+  }
+  const tex = new THREE.CanvasTexture(skogBild);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.repeat.set(langd / 3.2, 1);
+  return tex;
+}
+
 /**
  * En fönstervägg från golv till tak: rundade karmar med jämna mellanrum
  * och svagt blått glas emellan. Glaset kastar ingen skugga, sa solen
@@ -354,12 +410,16 @@ function snedvagg(s, material) {
 }
 
 function vaggMaterial(v, tema) {
-  // "yta" i kartfilen: "laxrosa" for accentvaggar, "tegel" for tegel.
-  // Utan yta blir vaggen varmvit.
+  // "yta" i kartfilen: "laxrosa" for accentvaggar, "tegel" for tegel,
+  // "skog" for en malad skog. Utan yta blir vaggen varmvit.
   if (v.yta === "laxrosa") return mat(tema.laxrosa);
   if (v.yta === "tegel") {
     return new THREE.MeshStandardMaterial({
       map: tegelTextur(tema, Math.max(v.bredd, v.djup)), roughness: 0.9 });
+  }
+  if (v.yta === "skog") {
+    return new THREE.MeshStandardMaterial({
+      map: skogTextur(tema, Math.max(v.bredd, v.djup)), roughness: 0.9 });
   }
   return mat(tema.vagg);
 }
