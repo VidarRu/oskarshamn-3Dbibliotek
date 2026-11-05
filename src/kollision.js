@@ -16,8 +16,9 @@ export function skapaHinder(layout) {
   for (const b of layout.blocks) if (!b.gangbar) lagg(b, "block");
   for (const h of layout.shelves) lagg(h, "hylla");
   for (const f of layout.fixtures) {
-    // Tavlor hanger pa vaggen och star inte i vagen.
-    if (f.typ === "tavla") continue;
+    // Tavlor hanger pa vaggen och star inte i vagen. Foremal med
+    // "gangbar": true, som en matta, gar att ga over.
+    if (f.typ === "tavla" || f.typ === "anslagstavla" || f.gangbar) continue;
     lagg(f, "inredning");
   }
   return ut;

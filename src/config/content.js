@@ -63,9 +63,23 @@ export const PLATSER = [
   {
     id: "barnavdelning",
     namn: "Barnavdelningen",
-    beskrivning: "Bilderböcker, barnböcker och en blomma att sitta i.",
+    beskrivning: "Bilderböcker och barnböcker, och Lilla skogen med ett träd i hörnet.",
     avdelning: true,
     farg: "#b9a684"
+  },
+  {
+    id: "lilla_skogen",
+    namn: "Lilla skogen",
+    beskrivning: "Ett hörn i barnavdelningen med ett träd och en målad skog på väggarna.",
+    avdelning: false,
+    farg: "#7f8a66"
+  },
+  {
+    id: "mangsprak",
+    namn: "Mångspråk för barn och unga",
+    beskrivning: "Böcker på många olika språk för barn och unga.",
+    avdelning: false,
+    farg: "#a99a78"
   },
   {
     id: "hanget",
@@ -133,19 +147,12 @@ export const PLATSER = [
   {
     id: "demokratitorget",
     namn: "Demokratitorget",
-    beskrivning: "Information om samhället, och soffor att sitta i.",
+    beskrivning: "En liten scen med stolar framför. Bakom scenen står fyra datorer.",
     avdelning: true,
     farg: "#9a9890"
   },
 
   // ------------------------------------------------- övriga platser
-  {
-    id: "utanfor",
-    namn: "Utanför entrén",
-    beskrivning: "Här börjar du.",
-    avdelning: false,
-    farg: "#c9c1ae"
-  },
   {
     id: "entre",
     namn: "Entré",
@@ -198,7 +205,14 @@ export const PLATSER = [
   {
     id: "datorer",
     namn: "Datorer",
-    beskrivning: "Datorer som alla får använda.",
+    beskrivning: "Fyra datorer i små bås bakom scenen på Demokratitorget. Alla får använda dem.",
+    avdelning: false,
+    farg: "#7d7a72"
+  },
+  {
+    id: "sokstation",
+    namn: "Sökstation",
+    beskrivning: "Hit kan du gå för att själv söka i bibliotekets samlingar.",
     avdelning: false,
     farg: "#7d7a72"
   },
@@ -325,7 +339,15 @@ export const INFOPUNKTER = [
     rubrik: "För barn och föräldrar",
     rader: [
       "Här finns bilderböcker, barnböcker och böcker på andra språk.",
-      "I hörnet i nordväst finns en stor blomma att sitta i."
+      "I hörnet i nordväst finns Lilla skogen, med ett träd och en målad skog på väggarna.",
+      "Närmast dagstidningarna står böcker på många språk för barn och unga."
+    ]
+  },
+  {
+    id: "info_sokstation",
+    rubrik: "Sökstation",
+    rader: [
+      "Hit kan du gå för att själv söka i bibliotekets samlingar."
     ]
   },
   {
@@ -351,7 +373,7 @@ export const RUTOR = {
   instruktionRader: [
     "Pilarna ↑ och ↓ går framåt och bakåt. Pilarna ← och → vrider figuren.",
     "Står du på en i-platta får du frågan om du vill veta vad platsen är. Du kan också klicka på i-bubblan.",
-    "Vid entrédörrarna får du välja vad du vill göra. Gula prickar visar sedan vägen. Gå ut till dörrarna igen för att välja något annat.",
+    "Vid informationsdisken får du välja vad du vill göra. Gula prickar visar sedan vägen. Gå tillbaka till disken för att välja något annat.",
     "I Hänget finns två små spel, om du vill prova.",
     "Tryck på ? eller H för att se det här igen."
   ],
@@ -374,10 +396,10 @@ export const RUTOR = {
 };
 
 // =====================================================================
-//  BEHOV – hjulet vid entrédörrarna
+//  BEHOV – hjulet vid informationsdisken
 // =====================================================================
 //
-//  När figuren kommer fram till entrédörrarna dyker ett hjul upp.
+//  När figuren kommer fram till informationsdisken dyker ett hjul upp.
 //  Pilarna ← och → vrider hjulet och Enter väljer. Sedan leder gula
 //  prickar till platsen.
 //
@@ -412,7 +434,7 @@ export const BEHOV = {
     { text: "Göra en utskrift",        mal: "utskrift",
       framme: "Här skriver du ut och kopierar." },
     { text: "Låna en dator",           mal: "datorer",
-      framme: "Här finns datorer som alla får använda." },
+      framme: "Här bakom scenen finns fyra datorer i små bås. Alla får använda dem." },
     { text: "Hitta barnböcker",        mal: "barnavdelning",
       framme: "Här är barnavdelningen, med bilderböcker och barnböcker." },
     { text: "Sitta och hänga",         mal: "hanget",
@@ -546,7 +568,19 @@ export const TEMA = {
   vaxt:          "#6f8a5e",   // växternas blad
   vaxtLjus:      "#8ea67a",
   kruka:         "#b0705a",   // tegelröda krukor
-  blomma:        "#cdb99b",   // blomdynan i barnavdelningen
+  blomma:        "#cdb99b",   // blomdynor
+  morkSkarm:     "#55534e",   // de morka skarmarna i datorbasen
+  kork:          "#c9b48f",   // anslagstavlan
+  tapet:         "#3f3d38",   // den morka tapeten bakom scenen
+  tapetMonster:  "#a8915e",   // det guldiga monstret i tapeten
+  lov: ["#c9a046", "#b0705a", "#9a9890", "#efe9dc", "#5a5650"],  // lovdraperiet
+  mattaBotten:   "#8a4a3e",   // mattan pa scenen, dampat vinrod
+  mattaMonster:  "#c9b48f",
+  tradStam:      "#8a6a4c",   // tradet i Lilla skogen
+  tradKrona:     "#c8a46e",
+  tradKronaLjus: "#d9bd8c",
+  skogMork:      "#5f7a5c",   // vaggmalningen i Lilla skogen
+  skogBakgrund:  "#cdd3bd",
 
   // Pendellampor hänger över de här platserna (samma id som i listan ovan)
   lampor: ["informationsdisk", "entre", "hanget", "demokratitorget", "barnavdelning",

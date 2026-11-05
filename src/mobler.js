@@ -216,8 +216,13 @@ function sittmobel(f, t, alla, index) {
   return g;
 }
 
-/** En stol med rygg pa den sida som "rygg" anger, sa att den vander sig mot bordet. */
+/**
+ * En stol med rygg pa den sida som "rygg" anger, sa att den vander sig mot
+ * bordet. "mot": [x, z] vrider i stallet stolen sa att den tittar mot den
+ * punkten, till exempel en scen.
+ */
 function stol(f, t) {
+  if (f.mot) return stolMot(f, t);
   const g = new THREE.Group();
   const sits = 0.45;
   const farg = mat(SITTFARGER(t)[sittIndex++ % 3]);
@@ -233,8 +238,34 @@ function stol(f, t) {
   return g;
 }
 
+function stolMot(f, t) {
+  const g = new THREE.Group();
+  const sits = 0.45, b = Math.min(f.bredd, f.djup), T = 0.05;
+  const farg = mat(SITTFARGER(t)[sittIndex++ % 3]);
+  const ben = mat(t.hylla);
+  // Byggd kring origo med ryggen at soder, alltsa tittande mot norr.
+  for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    g.add(cylinder(dx * (b / 2 - 0.05), dz * (b / 2 - 0.05), 0.02, sits - 0.04, 0, ben, 8));
+  }
+  g.add(rundLadaMitt(0, 0, b, b, 0.05, sits - 0.05, farg, 0.03));
+  g.add(rundLadaMitt(0, b / 2 - T / 2, b, T, f.hojd - sits, sits, farg, 0.02));
+  const m = mitt(f);
+  g.position.set(m.x, 0, m.z);
+  g.rotation.y = Math.atan2(-(f.mot[0] - m.x), -(f.mot[1] - m.z));
+  return g;
+}
+
 function bord(f, t) {
   const g = new THREE.Group();
+  // "enFot": true ger ett hogt cafebord med en fot och ett kryss i golvet.
+  if (f.enFot) {
+    const m = mitt(f);
+    g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.04, f.hojd - 0.04, mat(t.bjork), 0.02));
+    g.add(cylinder(m.x, m.z, 0.035, f.hojd - 0.04, 0, mat(t.hylla), 10));
+    g.add(rundLadaMitt(m.x, m.z, Math.min(f.bredd, 0.6), 0.07, 0.04, 0, mat(t.hylla), 0.02));
+    g.add(rundLadaMitt(m.x, m.z, 0.07, Math.min(f.djup, 0.6), 0.04, 0, mat(t.hylla), 0.02));
+    return g;
+  }
   // "rund": true ger ett runt bord pa en enda fot.
   if (f.rund) {
     const m = mitt(f), r = Math.min(f.bredd, f.djup) / 2;
@@ -275,7 +306,10 @@ function studiebas(f, t) {
   const bord = f.bord || K;
   const k0 = (K - bord) / 2;
   const BORDHOJD = 0.74, T = 0.05;
-  const skiva = mat(t.bjork), vit = mat(t.hylla), filt = mat(t.ljudvagg);
+  // "skarmar": "mork" ger morkgra skarmar. "dator": true stallar en
+  // dator med tangentbord pa varje skiva, med skarmen mot den bakre kanten.
+  const skiva = mat(t.bjork), vit = mat(t.hylla);
+  const filt = mat(f.skarmar === "mork" ? (t.morkSkarm || t.morkgra) : t.ljudvagg);
   const plats = L / antal;
   const radDjup = bord / rader;
 
@@ -312,6 +346,25 @@ function studiebas(f, t) {
     skarm(s, yttre ? 0 : k0, T, yttre ? K : bord);
   }
   if (rader === 2) skarm(T, K / 2 - T / 2, L - 2 * T, T);
+
+  // Datorerna. Den bakre kanten ar den som vetter at "bak" (norr, syd,
+  // ost eller vast), annars den forsta kanten tvars over.
+  if (f.dator && rader === 1) {
+    const bakForst = !f.bak || f.bak === "norr" || f.bak === "vast";
+    const svart = mat(t.automat);
+    for (let i = 0; i < antal; i++) {
+      const s = (i + 0.5) * plats;
+      const kBak = bakForst ? k0 + 0.12 : k0 + bord - 0.12;
+      const kTang = bakForst ? k0 + bord * 0.62 : k0 + bord * 0.38;
+      const ut = bakForst ? 1 : -1;
+      g.add(lada(s - 0.06, kBak - 0.06, 0.12, 0.12, 0.02, BORDHOJD, svart, 0.01));
+      g.add(lada(s - 0.02, kBak - 0.02, 0.04, 0.04, 0.12, BORDHOJD, svart, 0.01));
+      g.add(lada(s - 0.26, kBak - 0.025, 0.52, 0.05, 0.32, BORDHOJD + 0.12, svart, 0.02));
+      g.add(lada(s - 0.23, kBak + ut * 0.03 - 0.005, 0.46, 0.01, 0.26, BORDHOJD + 0.15,
+                 lysande(t.skarm, 0.6), 0.004));
+      g.add(lada(s - 0.21, kTang - 0.07, 0.42, 0.14, 0.025, BORDHOJD, vit, 0.01));
+    }
+  }
   return g;
 }
 
@@ -567,6 +620,13 @@ function pelare(f, t) {
   const m = mitt(f);
   const r = Math.min(f.bredd, f.djup) / 2;
   const farg = f.farg === "laxrosa" ? t.laxrosa : t.vagg;
+  // "form": "fyrkantig" ger en fyrkantig pelare med en mork sockel.
+  if (f.form === "fyrkantig") {
+    g.add(rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(farg), 0.03));
+    g.add(rundLada(f.x - 0.012, f.z - 0.012, f.bredd + 0.024, f.djup + 0.024, 0.16, 0,
+                   mat("#4a4744"), 0.02));
+    return g;
+  }
   g.add(cylinder(m.x, m.z, r, f.hojd, 0, mat(farg), 24));
   g.add(cylinder(m.x, m.z, r + 0.012, 0.16, 0, mat("#4a4744"), 24));
   return g;
@@ -876,7 +936,31 @@ function blomma(f, t) {
 function bank(f, t) {
   const g = new THREE.Group();
   g.add(rundLada(f.x + 0.05, f.z + 0.05, f.bredd - 0.1, f.djup - 0.1, f.hojd - 0.06, 0, mat(t.hylla), 0.04));
-  g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.06, f.hojd - 0.06, mat(t.bjork), 0.03));
+  g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.06, f.hojd - 0.06, mat(f.fack ? t.hylla : t.bjork), 0.03));
+  // "fack": true ger oppna fack i sidan, med lador i nagra av dem, pa den
+  // sida som "fackMot" anger (norr, syd, ost eller vast).
+  if (!f.fack) return g;
+  const sida = f.fackMot || "syd";
+  const langsX = sida === "norr" || sida === "syd";
+  const langd = langsX ? f.bredd : f.djup;
+  const antal = Math.max(1, Math.round(langd / 0.55));
+  const slp = slump(f.id);
+  const lador = [t.mint, "#f1ebe1", t.rosa, "#9fb1ad"];
+  for (let i = 0; i < antal; i++) {
+    const a = (i + 0.5) * langd / antal;
+    const fb = langd / antal - 0.1, fh = f.hojd - 0.2;
+    // Facket ar en mork oppning; i vartannat star en lada.
+    const yta = { norr: [f.x + a, f.z - 0.004], syd: [f.x + a, f.z + f.djup + 0.004],
+                  vast: [f.x - 0.004, f.z + a], ost: [f.x + f.bredd + 0.004, f.z + a] }[sida];
+    g.add(rundLadaMitt(yta[0], yta[1], langsX ? fb : 0.01, langsX ? 0.01 : fb, fh, 0.08,
+                       mat("#d8d2c6"), 0.01));
+    if (slp() < 0.55) {
+      const in1 = sida === "norr" ? 0.06 : sida === "syd" ? -0.06 : 0;
+      const in2 = sida === "vast" ? 0.06 : sida === "ost" ? -0.06 : 0;
+      g.add(rundLadaMitt(yta[0] + in2, yta[1] + in1, langsX ? fb * 0.8 : 0.05, langsX ? 0.05 : fb * 0.8,
+                         fh * 0.75, 0.08, mat(lador[Math.floor(slp() * lador.length)]), 0.02));
+    }
+  }
   return g;
 }
 
@@ -886,6 +970,8 @@ function bank(f, t) {
  * En spiraltrappa runt en pelare, som slingrar sig upp mot taket. Den gar
  * till en vaning som inte finns i kartan och gar inte att kliva upp i.
  * "steg" ar antalet trappsteg, "varv" hur langt den vrider sig.
+ * "forstaSteg" (norr, syd, ost, vast) ar hallet det nedersta steget
+ * pekar at, sa att man kliver pa trappan fran ratt sida.
  */
 function spiraltrappa(f, t) {
   const g = new THREE.Group();
@@ -893,10 +979,12 @@ function spiraltrappa(f, t) {
   const r = Math.min(f.bredd, f.djup) / 2;
   const n = f.steg || 16;
   const varv = f.varv || 0.85;
+  // Vinkeln raknas fran oster mot soder, som stegen vrids nedan.
+  const borja = { ost: 0, syd: Math.PI / 2, vast: Math.PI, norr: -Math.PI / 2 }[f.forstaSteg || "ost"];
   const steg = mat("#8f8b86");
   g.add(cylinder(m.x, m.z, 0.08, f.hojd, 0, mat(t.hylla), 16));
   for (let i = 0; i < n; i++) {
-    const v = (i / n) * varv * Math.PI * 2;
+    const v = borja + (i / n) * varv * Math.PI * 2;
     const del = new THREE.Group();
     del.add(rundLadaMitt(r / 2, 0, r - 0.02, r * 2 * Math.PI * varv / n + 0.06, 0.06, 0, steg, 0.02));
     del.position.set(m.x, (f.hojd * (i + 1)) / n - 0.06, m.z);
@@ -905,6 +993,372 @@ function spiraltrappa(f, t) {
     // En tunn ribba i racket vid varje steg.
     g.add(cylinder(m.x + Math.cos(v) * (r - 0.05), m.z + Math.sin(v) * (r - 0.05), 0.015,
                    0.9, (f.hojd * (i + 1)) / n, mat(t.bjork), 6));
+  }
+  return g;
+}
+
+// -------------------------------------------------------- anslagstavla
+
+/** En duk med nagra affischer, som ritas en gang per tavla. */
+function affischDuk(f, t) {
+  const slp = slump(f.id);
+  const B = 512, H = Math.round(512 * f.hojd / Math.max(f.bredd, f.djup));
+  const c = document.createElement("canvas");
+  c.width = B; c.height = H;
+  const x = c.getContext("2d");
+  // Korkbotten.
+  x.fillStyle = t.kork || "#c9b48f";
+  x.fillRect(0, 0, B, H);
+  const farger = [t.senap, t.mint, t.rosa, "#7f8a66", "#a88b6a", "#6b6a66"];
+  // Affischerna i ett glest rutnat, lite olika stora, aldrig sneda.
+  const kol = 4, rad = 2;
+  for (let r = 0; r < rad; r++) {
+    for (let k = 0; k < kol; k++) {
+      if (slp() < 0.12) continue;
+      const cb = B / kol, ch = H / rad;
+      const b = cb * (0.62 + slp() * 0.22), h = ch * (0.7 + slp() * 0.2);
+      const px = k * cb + (cb - b) / 2, py = r * ch + (ch - h) / 2;
+      x.fillStyle = "#fbf6ee";
+      x.fillRect(px, py, b, h);
+      // En fargad bild overst och nagra rader "text" under.
+      x.fillStyle = farger[Math.floor(slp() * farger.length)];
+      x.fillRect(px + b * 0.1, py + h * 0.08, b * 0.8, h * 0.42);
+      x.fillStyle = "#4a4744";
+      x.fillRect(px + b * 0.1, py + h * 0.58, b * 0.7, h * 0.07);
+      x.fillStyle = "#8d8984";
+      for (let i = 0; i < 3; i++) {
+        x.fillRect(px + b * 0.1, py + h * (0.72 + i * 0.08), b * (0.45 + slp() * 0.35), h * 0.035);
+      }
+      // Ett litet nalhuvud.
+      x.fillStyle = farger[Math.floor(slp() * 3)];
+      x.beginPath(); x.arc(px + b / 2, py + 6, 5, 0, Math.PI * 2); x.fill();
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/**
+ * En anslagstavla med affischer om aktiviteter. Den hanger pa en vagg och
+ * vetter at det hall som "riktning" anger. "y" ar hojden over golvet dar
+ * tavlan borjar, "hojd" tavlans egen hojd.
+ */
+function anslagstavla(f, t) {
+  return placera(f, (bredd, djup) => {
+    const g = new THREE.Group();
+    const y0 = f.y ?? 0.9;
+    g.add(rundLadaMitt(0, 0, bredd, djup, f.hojd, y0, mat(t.bjork), 0.02));
+    const bild = new THREE.Mesh(new THREE.PlaneGeometry(bredd - 0.08, f.hojd - 0.08),
+      new THREE.MeshStandardMaterial({ map: affischDuk(f, t), roughness: 0.9 }));
+    // Planet vetter mot syd fran borjan, vand det mot norr (framsidan).
+    bild.rotation.y = Math.PI;
+    bild.position.set(0, y0 + f.hojd / 2, -djup / 2 - 0.003);
+    g.add(bild);
+    return g;
+  });
+}
+
+// ---------------------------------------------------- aterlamningsvagn
+
+/**
+ * En svart vagn att lagga tillbaka bocker i: en lada pa fyra sma hjul,
+ * oppen upptill och med nagra bocker i. Framsidan vetter at "riktning".
+ */
+function aterlamningsvagn(f, t) {
+  return placera(f, (bredd, djup) => {
+    const g = new THREE.Group();
+    const svart = mat(t.automat);
+    const hjul = 0.1;
+    for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      g.add(cylinder(dx * (bredd / 2 - 0.08), dz * (djup / 2 - 0.08), 0.045, hjul, 0, mat("#5d5a56"), 12));
+    }
+    const h = f.hojd - hjul;
+    const T = 0.04;
+    // Botten och fyra sidor, sa att den ar oppen upptill.
+    g.add(rundLadaMitt(0, 0, bredd, djup, T, hjul, svart, 0.02));
+    g.add(rundLadaMitt(0, -djup / 2 + T / 2, bredd, T, h, hjul, svart, 0.02));
+    g.add(rundLadaMitt(0, djup / 2 - T / 2, bredd, T, h, hjul, svart, 0.02));
+    g.add(rundLadaMitt(-bredd / 2 + T / 2, 0, T, djup, h, hjul, svart, 0.02));
+    g.add(rundLadaMitt(bredd / 2 - T / 2, 0, T, djup, h, hjul, svart, 0.02));
+    // Nagra bocker som ligger i, strax under kanten.
+    const slp = slump(f.id);
+    for (let i = 0; i < 5; i++) {
+      const bok = rundLadaMitt((slp() - 0.5) * (bredd - 0.3), (slp() - 0.5) * (djup - 0.3),
+                               0.2, 0.27, 0.04, f.hojd - 0.2 + i * 0.03,
+                               mat(t.bocker[Math.floor(slp() * t.bocker.length)]), 0.01);
+      bok.rotation.y = (slp() - 0.5) * 1.2;
+      g.add(bok);
+    }
+    // En ljus skylt med en bok och en pil ner, pa framsidan.
+    g.add(rundLadaMitt(0, -djup / 2 - 0.005, bredd * 0.5, 0.01, 0.16, f.hojd - 0.28,
+                       mat("#f7f1e6"), 0.01));
+    g.add(rundLadaMitt(0, -djup / 2 - 0.012, 0.08, 0.01, 0.08, f.hojd - 0.24, mat(t.senap), 0.01));
+    return g;
+  });
+}
+
+// ------------------------------------------------------- nyhetshylla
+
+/**
+ * En luftig stallning for nya bocker: tunna ben och tre lutande hyllplan
+ * dar bockerna star med omslaget mot den som tittar. Framsidan vetter at
+ * "riktning".
+ */
+function nyhetshylla(f, t) {
+  return placera(f, (bredd, djup) => {
+    const g = new THREE.Group();
+    const vit = mat(t.hylla), tra = mat(t.bjork);
+    const slp = slump(f.id);
+    // Fyra tunna ben och en smal list overst.
+    for (const dx of [-bredd / 2 + 0.03, bredd / 2 - 0.03]) {
+      for (const dz of [-djup / 2 + 0.05, djup / 2 - 0.05]) {
+        g.add(cylinder(dx, dz, 0.018, f.hojd, 0, vit, 8));
+      }
+      g.add(rundLadaMitt(dx, 0, 0.04, djup - 0.06, 0.03, 0.06, vit, 0.01));
+      g.add(rundLadaMitt(dx, 0, 0.04, djup - 0.06, 0.03, f.hojd - 0.03, vit, 0.01));
+    }
+    // Tre plan som stiger bakat, som en trappa, sa att alla omslag syns.
+    const plan = 3;
+    for (let p = 0; p < plan; p++) {
+      const y = 0.32 + p * (f.hojd - 0.55) / (plan - 1);
+      const z = djup / 2 - 0.12 - (plan - 1 - p) * (djup - 0.24) / (plan - 1);
+      g.add(rundLadaMitt(0, z, bredd - 0.08, 0.16, 0.025, y, tra, 0.01));
+      g.add(rundLadaMitt(0, z - 0.075, bredd - 0.08, 0.015, 0.05, y + 0.02, tra, 0.006));
+      // Bocker med omslaget framat, lutade lite bakat.
+      const antal = Math.max(2, Math.floor((bredd - 0.16) / 0.27));
+      for (let i = 0; i < antal; i++) {
+        if (slp() < 0.12) continue;
+        const bok = new THREE.Group();
+        const h = 0.24 + slp() * 0.06;
+        bok.add(rundLadaMitt(0, 0, 0.18 + slp() * 0.03, 0.025, h, 0,
+                             mat(t.bocker[Math.floor(slp() * t.bocker.length)]), 0.008));
+        // En ljus ruta pa omslaget, som en titel.
+        bok.add(rundLadaMitt(0, -0.014, 0.12, 0.004, 0.05, h * 0.62, mat("#f7f1e6"), 0.002));
+        bok.position.set(-bredd / 2 + 0.08 + (i + 0.5) * (bredd - 0.16) / antal, y + 0.025, z - 0.02);
+        bok.rotation.x = -0.18;
+        g.add(bok);
+      }
+    }
+    return g;
+  });
+}
+
+// ------------------------------------------------------------ spelskap
+
+/**
+ * Ett fyrsidigt skap for tv-spel. Spelfodralen star i hyllplan pa alla
+ * fyra sidor, med ryggen ut som bocker. Det gar att snurra i verkligheten,
+ * men star still har.
+ */
+function spelskap(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const b = Math.min(f.bredd, f.djup);
+  const vit = mat(t.hylla), mork = mat("#6b6a66");
+  const slp = slump(f.id);
+  g.add(cylinder(m.x, m.z, b * 0.45, 0.06, 0, mork, 24));
+  g.add(rundLadaMitt(m.x, m.z, b - 0.08, b - 0.08, f.hojd - 0.06, 0.06, vit, 0.03));
+  g.add(rundLadaMitt(m.x, m.z, b, b, 0.05, f.hojd, vit, 0.02));
+  const plan = 4;
+  const farger = [...t.bocker, "#5f6f7a", "#7a8b96"];
+  const sidor = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+  for (const [ux, uz] of sidor) {
+    const yta = (b - 0.08) / 2;
+    for (let p = 0; p < plan; p++) {
+      const y = 0.22 + p * (f.hojd - 0.35) / plan;
+      // Hyllkanten och en rad fodral.
+      const kx = m.x + ux * (yta + 0.005), kz = m.z + uz * (yta + 0.005);
+      g.add(rundLadaMitt(kx, kz, ux ? 0.02 : b - 0.12, uz ? 0.02 : b - 0.12, 0.02, y, vit, 0.005));
+      const antal = 14;
+      for (let i = 0; i < antal; i++) {
+        if (slp() < 0.08) continue;
+        const a = -(b - 0.16) / 2 + (i + 0.5) * (b - 0.16) / antal;
+        const fx = m.x + ux * (yta + 0.01) + (uz ? a : 0);
+        const fz = m.z + uz * (yta + 0.01) + (ux ? a : 0);
+        g.add(rundLadaMitt(fx, fz, ux ? 0.03 : 0.022, uz ? 0.03 : 0.022, 0.17, y + 0.02,
+                           mat(farger[Math.floor(slp() * farger.length)]), 0.004));
+      }
+    }
+  }
+  return g;
+}
+
+// --------------------------------------------------------------- tradet
+
+/**
+ * Ett leksakstrad: en tjock brun stam med nagra grenar och en platt,
+ * gyllene krona av runda moln, som tradet i Lilla skogen. "krona" ar
+ * kronans radie. Bara stammen star i vagen.
+ */
+function trad(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const stamFarg = mat(t.tradStam || "#8a6a4c");
+  const kronaR = f.krona || 1.3;
+  const hojd = f.hojd;
+  const kronaY = hojd - 0.3;
+
+  /** En gren som en avsmalnande cylinder fran punkt a till punkt b. */
+  const gren = (a, b, ra, rb) => {
+    const d = new THREE.Vector3().subVectors(b, a);
+    const nat = new THREE.Mesh(new THREE.CylinderGeometry(rb, ra, d.length(), 10), stamFarg);
+    nat.position.copy(a).addScaledVector(d, 0.5);
+    nat.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
+    nat.castShadow = nat.receiveShadow = true;
+    g.add(nat);
+  };
+  const V = (x, y, z) => new THREE.Vector3(m.x + x, y, m.z + z);
+  // Stammen delar sig i fyra grenar som gar snett uppat mot kronan.
+  gren(V(0, 0, 0), V(0, hojd * 0.55, 0), 0.2, 0.14);
+  g.add(cylinder(m.x, m.z, 0.3, 0.1, 0, stamFarg, 14));
+  for (const [v, l] of [[0.4, 0.75], [2.0, 0.65], [3.4, 0.8], [5.0, 0.6]]) {
+    const ut = V(Math.cos(v) * l, kronaY - 0.1, Math.sin(v) * l);
+    gren(V(0, hojd * 0.52, 0), ut, 0.1, 0.05);
+  }
+
+  // Kronan: platta, runda moln i tva toner, i tva ringar runt mitten.
+  const slp = slump(f.id);
+  const krona = [t.tradKrona || "#c8a46e", t.tradKronaLjus || "#d9bd8c"];
+  const molnGeo = new THREE.SphereGeometry(1, 20, 12);
+  const moln = (x, y, z, r, farg) => {
+    const k = new THREE.Mesh(molnGeo, mat(farg));
+    k.scale.set(r, r * 0.38, r);
+    k.position.set(m.x + x, y, m.z + z);
+    k.castShadow = k.receiveShadow = true;
+    g.add(k);
+  };
+  moln(0, kronaY + 0.05, 0, kronaR * 0.55, krona[1]);
+  for (const [ring, antal, storlek] of [[0.42, 5, 0.38], [0.72, 9, 0.3]]) {
+    for (let i = 0; i < antal; i++) {
+      const v = (i / antal) * Math.PI * 2 + slp() * 0.5;
+      const r = kronaR * (ring + slp() * 0.06);
+      moln(Math.cos(v) * r, kronaY - 0.05 + slp() * 0.15, Math.sin(v) * r,
+           kronaR * (storlek + slp() * 0.08), krona[(i + (ring > 0.5 ? 1 : 0)) % 2]);
+    }
+  }
+  return g;
+}
+
+// --------------------------------------------------------------- mattan
+
+/** Monstret pa en orientalisk matta, i dampade farger. */
+function mattDuk(f, t) {
+  const B = 512, H = Math.round(512 * f.djup / f.bredd);
+  const c = document.createElement("canvas");
+  c.width = B; c.height = H;
+  const x = c.getContext("2d");
+  const botten = t.mattaBotten || "#8a4a3e", monster = t.mattaMonster || "#c9b48f";
+  x.fillStyle = botten;
+  x.fillRect(0, 0, B, H);
+  // En bard runt kanten och ett falt av sma rutor i mitten.
+  const kant = 26;
+  x.strokeStyle = monster;
+  x.lineWidth = 6;
+  x.strokeRect(kant / 2, kant / 2, B - kant, H - kant);
+  x.strokeRect(kant * 1.4, kant * 1.4, B - kant * 2.8, H - kant * 2.8);
+  const ruta = 34;
+  const slp = slump(f.id);
+  const toner = [monster, "#a3765f", "#6b5a48", "#b9a684"];
+  for (let yy = kant * 2; yy < H - kant * 2 - ruta / 2; yy += ruta) {
+    for (let xx = kant * 2; xx < B - kant * 2 - ruta / 2; xx += ruta) {
+      x.fillStyle = toner[Math.floor(slp() * toner.length)];
+      x.beginPath();
+      x.moveTo(xx + ruta / 2, yy + 4);
+      x.lineTo(xx + ruta - 4, yy + ruta / 2);
+      x.lineTo(xx + ruta / 2, yy + ruta - 4);
+      x.lineTo(xx + 4, yy + ruta / 2);
+      x.fill();
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/** En tunn matta pa golvet. Den gar att ga pa. */
+function matta(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  g.add(rundLada(f.x, f.z, f.bredd, f.djup, 0.015, 0.012, mat(t.mattaBotten || "#8a4a3e"), 0.006));
+  const yta = new THREE.Mesh(new THREE.PlaneGeometry(f.bredd - 0.02, f.djup - 0.02),
+    new THREE.MeshStandardMaterial({ map: mattDuk(f, t), roughness: 0.95 }));
+  yta.rotation.x = -Math.PI / 2;
+  yta.position.set(m.x, 0.028, m.z);
+  yta.receiveShadow = true;
+  g.add(yta);
+  return g;
+}
+
+// ---------------------------------------------------------- skarmvagg
+
+let tapetBild = null;
+/** Mork tapet med ett guldigt rutmonster, som skarmarna bakom scenen. */
+function tapetTextur(t, langd, hojd) {
+  if (!tapetBild) {
+    tapetBild = document.createElement("canvas");
+    tapetBild.width = tapetBild.height = 128;
+    const c = tapetBild.getContext("2d");
+    c.fillStyle = t.tapet || "#3f3d38";
+    c.fillRect(0, 0, 128, 128);
+    c.strokeStyle = t.tapetMonster || "#a8915e";
+    c.fillStyle = t.tapetMonster || "#a8915e";
+    c.lineWidth = 3;
+    // Ett romb-monster med en liten prick i varje romb.
+    for (const [cx, cy] of [[32, 32], [96, 96], [96, 32], [32, 96]]) {
+      c.beginPath();
+      c.moveTo(cx, cy - 26); c.lineTo(cx + 26, cy); c.lineTo(cx, cy + 26); c.lineTo(cx - 26, cy);
+      c.closePath(); c.stroke();
+      c.beginPath(); c.arc(cx, cy, 5, 0, Math.PI * 2); c.fill();
+    }
+  }
+  const tex = new THREE.CanvasTexture(tapetBild);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  // En ruta i bilden ar en halv meter.
+  tex.repeat.set(langd / 0.5, hojd / 0.5);
+  return tex;
+}
+
+/**
+ * En fristaende skarmvagg, lagre an de riktiga vaggarna. "monster": true
+ * ger den morka tapeten. "lov": true hanger ett draperi av lov ovanfor
+ * vaggen, fran taket och ner mot vaggens overkant.
+ */
+function skarmvagg(f, t) {
+  const g = new THREE.Group();
+  const langsX = f.bredd >= f.djup;
+  const langd = langsX ? f.bredd : f.djup;
+  const material = f.monster
+    ? new THREE.MeshStandardMaterial({ map: tapetTextur(t, langd, f.hojd), roughness: 0.9 })
+    : mat(t.vagg);
+  g.add(rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, material, 0.02));
+  g.add(rundLada(f.x - 0.01, f.z - 0.01, f.bredd + 0.02, f.djup + 0.02, 0.03, f.hojd,
+                 mat(t.automat), 0.01));
+  if (!f.lov) return g;
+
+  // Loven hanger i tre rader pa snoren fran taket, tatt, i dampade farger.
+  const slp = slump(f.id);
+  const farger = t.lov || [t.senap, t.rosa, "#9a9890", "#efe9dc", "#5a5650"];
+  const m = mitt(f);
+  const lovGeo = new THREE.SphereGeometry(0.5, 10, 8);
+  const topp = 3.05, botten = f.hojd + 0.12;
+  const antal = Math.round(langd / 0.13);
+  for (let rad = 0; rad < 3; rad++) {
+    for (let i = 0; i < antal; i++) {
+      const a = -langd / 2 + (i + 0.5 + (rad % 2) * 0.5) * langd / antal;
+      if (Math.abs(a) > langd / 2 - 0.05) continue;
+      const h = 0.34 + slp() * 0.14;
+      const y = botten + h / 2 + rad * (topp - botten - h) / 2 + slp() * 0.06;
+      const lov = new THREE.Mesh(lovGeo, mat(farger[Math.floor(slp() * farger.length)]));
+      lov.scale.set(langsX ? 0.13 : 0.02, h, langsX ? 0.02 : 0.13);
+      const ut = (rad - 1) * 0.03;
+      lov.position.set(langsX ? m.x + a : m.x + ut, y, langsX ? m.z + ut : m.z + a);
+      lov.castShadow = true;
+      g.add(lov);
+    }
   }
   return g;
 }
@@ -982,6 +1436,13 @@ export function byggMobel(f, t, alla) {
     case "blomma": return blomma(f, t);
     case "bank": return bank(f, t);
     case "spiraltrappa": return spiraltrappa(f, t);
+    case "anslagstavla": return anslagstavla(f, t);
+    case "aterlamningsvagn": return aterlamningsvagn(f, t);
+    case "nyhetshylla": return nyhetshylla(f, t);
+    case "spelskap": return spelskap(f, t);
+    case "trad": return trad(f, t);
+    case "matta": return matta(f, t);
+    case "skarmvagg": return skarmvagg(f, t);
     default: return rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(t.hylla), 0.06);
   }
 }
