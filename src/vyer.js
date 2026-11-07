@@ -17,6 +17,11 @@ export const VYER = {
     position: [19.7, 70, 26.5],
     mot: [19.7, 0, 26]
   },
+  vasterut: {
+    beskrivning: "Vastra delen av salen rakt uppifran: barnavdelningen, borden och Demokratitorget",
+    position: [7.0, 24.0, 15.01],
+    mot: [7.0, 0, 15.0]
+  },
   start: {
     beskrivning: "Dar figuren borjar, framfor informationsdisken",
     position: [11.0, 3.2, 49.2],
