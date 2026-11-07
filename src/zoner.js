@@ -14,7 +14,8 @@ export function sammanfogaPlatser(layout, platser) {
   const plan = layout.meta?.plan ?? 0;
   return platser
     .filter(p => zoner.has(p.id))
-    .map(p => ({ ...p, plan, rutor: zoner.get(p.id).rutor, skylt: zoner.get(p.id).skylt }));
+    .map(p => ({ ...p, plan, rutor: zoner.get(p.id).rutor, skylt: zoner.get(p.id).skylt,
+                 golv: zoner.get(p.id).golv !== false }));
 }
 
 /** Ligger punkten i platsens zon, eventuellt med lite marginal? */
@@ -102,7 +103,9 @@ function byggGolvzoner(layout, platser) {
   const duk = nyDuk(Math.ceil(bredd * PX_PER_METER), Math.ceil(djup * PX_PER_METER));
   const ctx = duk.getContext("2d");
 
-  for (const p of platser) {
+  // En zon med "golv": false ar bara en skylt, till exempel en hyllskylt
+  // inne i en avdelning som redan har en egen yta pa golvet.
+  for (const p of platser.filter(p => p.golv)) {
     const zon = ritaZon(p.rutor, p.farg);
     // Svaga ytor: zonen ska antyda platsen, inte ta over bilden.
     ctx.globalAlpha = p.avdelning ? 0.32 : 0.2;

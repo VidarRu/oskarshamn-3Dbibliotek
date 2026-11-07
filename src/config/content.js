@@ -63,7 +63,7 @@ export const PLATSER = [
   {
     id: "barnavdelning",
     namn: "Barnavdelningen",
-    beskrivning: "Bilderböcker och barnböcker, och Lilla skogen med ett träd i hörnet.",
+    beskrivning: "Barnböcker, fackböcker och serier för barn, en liten scen att sitta på och Lilla skogen med ett träd i hörnet.",
     avdelning: true,
     farg: "#b9a684"
   },
@@ -84,7 +84,7 @@ export const PLATSER = [
   {
     id: "hanget",
     namn: "Hänget",
-    beskrivning: "Ungdomsavdelningen. Böcker, ett bord och en soffa för dig som är ung.",
+    beskrivning: "Ungdomsavdelningen. Manga, serier och ungdomsböcker, även på engelska, och ett bord och en soffa för dig som är ung.",
     avdelning: true,
     farg: "#7f8a66"
   },
@@ -138,16 +138,9 @@ export const PLATSER = [
     farg: "#a46e58"
   },
   {
-    id: "dagstidningar",
-    namn: "Dagstidningar",
-    beskrivning: "Dagens tidningar och bord att läsa vid.",
-    avdelning: true,
-    farg: "#a39279"
-  },
-  {
     id: "demokratitorget",
     namn: "Demokratitorget",
-    beskrivning: "En liten scen med stolar framför. Bakom scenen står fyra datorer.",
+    beskrivning: "En liten, låg scen med rader av stolar framför. Bakom scenen hänger en ridå av löv, och bakom den står fyra datorer.",
     avdelning: true,
     farg: "#9a9890"
   },
@@ -205,7 +198,7 @@ export const PLATSER = [
   {
     id: "datorer",
     namn: "Datorer",
-    beskrivning: "Fyra datorer i små bås bakom scenen på Demokratitorget. Alla får använda dem.",
+    beskrivning: "Fyra datorer i små bås bakom lövridån på Demokratitorget. Du kommer dit från borden vid fönstret eller från Utskrift. Alla får använda dem.",
     avdelning: false,
     farg: "#7d7a72"
   },
@@ -226,7 +219,7 @@ export const PLATSER = [
   {
     id: "grattan",
     namn: "Gråttan",
-    beskrivning: "Ett litet rum med egen dörr.",
+    beskrivning: "Ett litet rum med egen dörr, där du kan spela tv-spel.",
     avdelning: false,
     farg: "#7f8a66"
   },
@@ -254,17 +247,43 @@ export const PLATSER = [
   {
     id: "studierum1",
     namn: "Studierum 1",
-    beskrivning: "Ett rum med ett bord för fyra, där du kan plugga i lugn och ro.",
+    beskrivning: "Ett rum med ett bord för sex, där du kan plugga i lugn och ro.",
     avdelning: false,
     farg: "#8f948a"
   },
   {
     id: "studierum2",
     namn: "Studierum 2",
-    beskrivning: "Ett rum med fyra skrivbord, där du kan plugga i lugn och ro.",
+    beskrivning: "Ett rum med ett bord för sex, där du kan plugga i lugn och ro.",
     avdelning: false,
     farg: "#8f948a"
-  }
+  },
+
+  // ------------------------------------------------- hyllskyltar
+  // Skyltar på hyllorna inne i en avdelning. De har ingen egen yta på
+  // golvet ("golv": false i kartfilen).
+  { id: "fackbocker_barn", namn: "Fackböcker för barn",
+    beskrivning: "Böcker om allt möjligt för barn.", avdelning: false, farg: "#b9a684" },
+  { id: "lattfakta", namn: "Lättfakta",
+    beskrivning: "Lättlästa fackböcker för barn.", avdelning: false, farg: "#b9a684" },
+  { id: "kapitel_yngre", namn: "Kapitelböcker för yngre barn",
+    beskrivning: "Böcker med kapitel för barn som börjar läsa själva.", avdelning: false, farg: "#b9a684" },
+  { id: "kapitel_mellan", namn: "Kapitelböcker för mellanåldern",
+    beskrivning: "Böcker med kapitel för barn i mellanåldern.", avdelning: false, farg: "#b9a684" },
+  { id: "ljudbocker_barn", namn: "Ljudböcker för barn",
+    beskrivning: "Böcker att lyssna på för barn.", avdelning: false, farg: "#b9a684" },
+  { id: "serier_barn", namn: "Serier för barn",
+    beskrivning: "Serietidningar och seriealbum för barn.", avdelning: false, farg: "#b9a684" },
+  { id: "manga", namn: "Manga",
+    beskrivning: "Japanska serier.", avdelning: false, farg: "#7f8a66" },
+  { id: "serier_unga", namn: "Serier",
+    beskrivning: "Serier för dig som är ung.", avdelning: false, farg: "#7f8a66" },
+  { id: "ungdom", namn: "Ungdomsböcker",
+    beskrivning: "Böcker för dig som är ung.", avdelning: false, farg: "#7f8a66" },
+  { id: "ungdom_engelska", namn: "Ungdomsböcker på engelska",
+    beskrivning: "Böcker på engelska för dig som är ung.", avdelning: false, farg: "#7f8a66" },
+  { id: "kulturradet", namn: "Böcker från Kulturrådet",
+    beskrivning: "Böcker som Kulturrådet har skickat ut till biblioteken.", avdelning: false, farg: "#a88b6a" }
 ];
 
 // =====================================================================
@@ -340,7 +359,7 @@ export const INFOPUNKTER = [
     rader: [
       "Här finns bilderböcker, barnböcker och böcker på andra språk.",
       "I hörnet i nordväst finns Lilla skogen, med ett träd och en målad skog på väggarna.",
-      "Närmast dagstidningarna står böcker på många språk för barn och unga."
+      "Söder om den långa hyllan står böcker på många språk för barn och unga."
     ]
   },
   {
@@ -441,8 +460,6 @@ export const BEHOV = {
       framme: "Hänget är till för dig som är ung. Slå dig ner!" },
     { text: "Sitta ner en stund",      mal: "demokratitorget",
       framme: "Här på Demokratitorget kan du sitta ner en stund." },
-    { text: "Läsa en tidning",         mal: "dagstidningar",
-      framme: "Här finns dagens tidningar. Tidskrifterna står en bit bort åt öster." },
     { text: "Bara titta runt",         mal: null }
   ]
 };
@@ -584,7 +601,7 @@ export const TEMA = {
 
   // Pendellampor hänger över de här platserna (samma id som i listan ovan)
   lampor: ["informationsdisk", "entre", "hanget", "demokratitorget", "barnavdelning",
-           "poesi", "oskarshamnssamlingen", "dagstidningar", "studierum1", "studierum2",
+           "poesi", "oskarshamnssamlingen", "studierum1", "studierum2",
            "lana_lamna"],
 
   // Accentfärger. senap används till i-plattorna, så den ska synas, men

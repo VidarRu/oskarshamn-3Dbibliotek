@@ -372,7 +372,9 @@ function studiebas(f, t) {
 
 function scen(f, t) {
   const g = new THREE.Group();
-  g.add(rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(t.bjork), 0.08));
+  g.add(rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(t.bjork), Math.min(0.08, f.hojd / 2)));
+  // "fond": false ger en lag scen utan fondvagg.
+  if (f.fond === false) return g;
   // Fondvagg mot norra vaggen, i det bla scenljuset fran fotot.
   g.add(rundLada(f.x, f.z - 0.3, f.bredd, 0.08, 2.6, f.hojd,
                  mat(t.scenFond, { emissive: t.scenFond, emissiveIntensity: 0.25 }), 0.03));
@@ -1363,6 +1365,103 @@ function skarmvagg(f, t) {
   return g;
 }
 
+// ------------------------------------------------------------ lovridan
+
+/**
+ * Ett draperi av lov som hanger fran taket nastan ner till golvet, pa
+ * tunna tradar. Det gar inte att ga igenom. Inga vaggar, bara lov.
+ */
+function lovrida(f, t) {
+  const g = new THREE.Group();
+  const langsX = f.bredd >= f.djup;
+  const langd = langsX ? f.bredd : f.djup;
+  const m = mitt(f);
+  const slp = slump(f.id);
+  const farger = t.lov || [t.senap, t.rosa, "#9a9890", "#efe9dc", "#5a5650"];
+  const lovGeo = new THREE.SphereGeometry(0.5, 8, 6);
+  const topp = 3.15, botten = f.botten ?? 0.35;
+  // En smal list i taket som tradarna hanger i.
+  g.add(langsX ? rundLadaMitt(m.x, m.z, langd, 0.06, 0.05, topp, mat(t.automat), 0.02)
+               : rundLadaMitt(m.x, m.z, 0.06, langd, 0.05, topp, mat(t.automat), 0.02));
+  const tradar = Math.round(langd / 0.2);
+  for (let i = 0; i < tradar; i++) {
+    const a = -langd / 2 + (i + 0.5) * langd / tradar;
+    const nere = botten + slp() * 0.3;
+    const trad = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, topp - nere, 4),
+                                mat("#d8d2c6"));
+    trad.position.set(langsX ? m.x + a : m.x, (topp + nere) / 2, langsX ? m.z : m.z + a);
+    g.add(trad);
+    for (let y = nere; y < topp - 0.15; y += 0.26 + slp() * 0.08) {
+      const lov = new THREE.Mesh(lovGeo, mat(farger[Math.floor(slp() * farger.length)]));
+      const h = 0.16 + slp() * 0.06;
+      lov.scale.set(langsX ? 0.09 : 0.015, h, langsX ? 0.015 : 0.09);
+      lov.rotation[langsX ? "z" : "x"] = (slp() - 0.5) * 0.8;
+      lov.position.set(langsX ? m.x + a : m.x, y + h / 2, langsX ? m.z : m.z + a);
+      lov.castShadow = true;
+      g.add(lov);
+    }
+  }
+  return g;
+}
+
+// ------------------------------------------------------- blomstallning
+
+/**
+ * En blomstallning: blomlador som pa en balkong, staplade ovanpa varandra
+ * i en smal svart stallning, sa att de bildar en lag vagg. Byggd langs x
+ * kring origo. Anvands for sneda vaggar med "typ": "blomstallning".
+ */
+export function blomstallning(langd, tjock, hojd, t, id) {
+  const g = new THREE.Group();
+  const svart = mat(t.automat);
+  const slp = slump(id);
+  const vaningar = Math.max(2, Math.round(hojd / 0.42));
+  const steg = hojd / vaningar;
+  for (const x of [-langd / 2 + 0.03, langd / 2 - 0.03]) {
+    g.add(rundLadaMitt(x, 0, 0.04, tjock, hojd, 0, svart, 0.015));
+  }
+  const blad = [t.vaxt || "#7d8f6a", t.vaxtLjus || "#94a37e"];
+  const blommor = [t.rosa, t.senap, "#efe9dc"];
+  const klotGeo = new THREE.SphereGeometry(1, 10, 8);
+  const klot = (x, y, z, r, farg) => {
+    const k = new THREE.Mesh(klotGeo, mat(farg));
+    k.scale.setScalar(r);
+    k.position.set(x, y, z);
+    k.castShadow = true;
+    g.add(k);
+  };
+  for (let v = 0; v < vaningar; v++) {
+    const y0 = v * steg + 0.08;
+    const lada = Math.min(0.18, steg * 0.45);
+    g.add(rundLadaMitt(0, 0, langd - 0.1, tjock * 0.8, lada, y0, mat(t.kruka || t.bjork), 0.03));
+    // Bladen vaxer upp ur ladan och hanger lite over kanten.
+    const antal = Math.max(2, Math.round(langd / 0.16));
+    for (let i = 0; i < antal; i++) {
+      const x = -langd / 2 + 0.1 + (i + 0.5) * (langd - 0.2) / antal;
+      const sida = (slp() - 0.5) * tjock * 0.6;
+      klot(x, y0 + lada + 0.04 + slp() * 0.05, sida, 0.08 + slp() * 0.03, blad[i % 2]);
+      if (slp() < 0.25) klot(x, y0 + lada + 0.11, sida, 0.035, blommor[Math.floor(slp() * 3)]);
+    }
+  }
+  return g;
+}
+
+/** En hog barstol: rund sits pa ett smalt ben med en fotring. */
+function barstol(f, t) {
+  const g = new THREE.Group();
+  const m = mitt(f);
+  const r = Math.min(f.bredd, f.djup) / 2;
+  const svart = mat(t.automat);
+  g.add(cylinder(m.x, m.z, r * 0.75, 0.03, 0, svart, 20));
+  g.add(cylinder(m.x, m.z, 0.03, f.hojd - 0.08, 0, svart, 10));
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 0.6, 0.015, 6, 20), svart);
+  ring.rotation.x = Math.PI / 2;
+  ring.position.set(m.x, f.hojd * 0.35, m.z);
+  g.add(ring);
+  g.add(cylinder(m.x, m.z, r, 0.08, f.hojd - 0.08, mat(t.senap), 20));
+  return g;
+}
+
 // -------------------------------------------------------- pendellampor
 
 let lampGeo = null;
@@ -1443,6 +1542,8 @@ export function byggMobel(f, t, alla) {
     case "trad": return trad(f, t);
     case "matta": return matta(f, t);
     case "skarmvagg": return skarmvagg(f, t);
+    case "lovrida": return lovrida(f, t);
+    case "barstol": return barstol(f, t);
     default: return rundLada(f.x, f.z, f.bredd, f.djup, f.hojd, 0, mat(t.hylla), 0.06);
   }
 }

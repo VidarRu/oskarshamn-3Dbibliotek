@@ -8,7 +8,7 @@
 import * as THREE from "three";
 import { mat, rundLada, rundLadaMitt, slaIhop } from "./former.js";
 import { byggHyllor } from "./bocker.js";
-import { byggMobel, pendellampa } from "./mobler.js";
+import { byggMobel, pendellampa, blomstallning } from "./mobler.js";
 
 export const VAGGHOJD = 3.20;
 const GOLVTJOCKLEK = 0.30;
@@ -397,15 +397,60 @@ export function forberedSnedvaggar(layout) {
   }
 }
 
-/** En sned vagg: en rundad lada fran punkt till punkt, vriden runt lodlinjen. */
-function snedvagg(s, material) {
+/**
+ * En sned vagg: en rundad lada fran punkt till punkt, vriden runt lodlinjen.
+ * "glas": true ger en glasvagg fran golv till tak. "hojd" ger en lag vagg.
+ * "typ": "skarm" ger en utfallbar skarmvagg i paneler och "typ":
+ * "blomstallning" en lag vagg av blomlador ovanpa varandra.
+ */
+function snedvagg(s, tema) {
   const [x1, z1] = s.fran, [x2, z2] = s.till;
   const t = s.tjocklek ?? 0.2;
   const langd = Math.hypot(x2 - x1, z2 - z1);
-  const g = new THREE.Group();
-  g.add(rundLadaMitt(0, 0, langd + t, t, VAGGHOJD, 0, material, 0.1));
+  const hojd = s.hojd ?? VAGGHOJD;
+  let g;
+  if (s.glas) g = snedGlas(langd, t, tema);
+  else if (s.typ === "blomstallning") g = blomstallning(langd, t, hojd, tema, s.id);
+  else if (s.typ === "skarm") g = skarmPaneler(langd, t, hojd, tema);
+  else {
+    g = new THREE.Group();
+    g.add(rundLadaMitt(0, 0, langd + t, t, hojd, 0, vaggMaterial({ ...s, bredd: langd, djup: t }, tema),
+                       hojd < VAGGHOJD ? 0.04 : 0.1));
+  }
   g.position.set((x1 + x2) / 2, 0, (z1 + z2) / 2);
   g.rotation.y = Math.atan2(-(z2 - z1), x2 - x1);
+  return g;
+}
+
+/** En glasvagg langs x kring origo: karmar och svagt blatt glas, som fonstren. */
+function snedGlas(langd, t, tema) {
+  const g = new THREE.Group();
+  const karm = mat(tema.karm);
+  g.add(rundLadaMitt(0, 0, langd + t, t, 0.14, 0, karm, 0.05));
+  g.add(rundLadaMitt(0, 0, langd + t, t, 0.2, VAGGHOJD - 0.2, karm, 0.06));
+  const rutor = Math.max(1, Math.round(langd / 1.2));
+  for (let i = 0; i <= rutor; i++) {
+    g.add(rundLadaMitt(-langd / 2 + i * langd / rutor, 0, 0.1, t, VAGGHOJD, 0, karm, 0.04));
+  }
+  const glas = new THREE.Mesh(new THREE.BoxGeometry(langd, VAGGHOJD - 0.34, 0.03),
+    new THREE.MeshStandardMaterial({ color: tema.glas, transparent: true, opacity: 0.28,
+      roughness: 0.1, metalness: 0.1, depthWrite: false }));
+  glas.position.y = 0.14 + (VAGGHOJD - 0.34) / 2;
+  g.add(glas);
+  return g;
+}
+
+/** En utfallbar skarmvagg: ljusa paneler med smala glipor och en mork overkant. */
+function skarmPaneler(langd, t, hojd, tema) {
+  const g = new THREE.Group();
+  const antal = Math.max(1, Math.round(langd / 0.6));
+  const b = langd / antal;
+  for (let i = 0; i < antal; i++) {
+    g.add(rundLadaMitt(-langd / 2 + (i + 0.5) * b, 0, b - 0.03, t, hojd - 0.06, 0.06,
+                       mat(tema.vagg), 0.02));
+    g.add(rundLadaMitt(-langd / 2 + (i + 0.5) * b, 0, b - 0.03, t + 0.01, 0.03, hojd - 0.03,
+                       mat(tema.automat), 0.01));
+  }
   return g;
 }
 
@@ -426,7 +471,7 @@ function vaggMaterial(v, tema) {
 
 function byggVaggar(layout, tema) {
   const grupp = new THREE.Group();
-  for (const s of layout.snedvaggar || []) grupp.add(snedvagg(s, mat(tema.vagg)));
+  for (const s of layout.snedvaggar || []) grupp.add(snedvagg(s, tema));
   for (const v of layout.walls) {
     if (v.del) continue;                 // bit av en sned vagg
     if (v.fonster) {
@@ -545,7 +590,10 @@ export function byggVarld(layout, tema) {
   mobler.name = "mobler";
   for (const f of layout.fixtures) {
     const m = f.ner ? { ...f, nerMot: f.nerMot || nerRiktning(layout, f) } : f;
-    mobler.add(byggMobel(m, tema, layout.fixtures));
+    const mobel = byggMobel(m, tema, layout.fixtures);
+    // "golvhojd" lyfter en mobel som star pa nagot, till exempel pa en scen.
+    if (f.golvhojd) mobel.position.y += f.golvhojd;
+    mobler.add(mobel);
   }
   varld.add(mobler);
 
