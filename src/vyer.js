@@ -17,6 +17,11 @@ export const VYER = {
     position: [19.7, 70, 26.5],
     mot: [19.7, 0, 26]
   },
+  vasterut: {
+    beskrivning: "Vastra delen av salen rakt uppifran: barnavdelningen, borden och Demokratitorget",
+    position: [7.0, 24.0, 15.01],
+    mot: [7.0, 0, 15.0]
+  },
   start: {
     beskrivning: "Dar figuren borjar, framfor informationsdisken",
     position: [11.0, 3.2, 49.2],
@@ -78,14 +83,39 @@ export const VYER = {
     mot: [38.0, 0.8, 19.0]
   },
   meroppet: {
-    beskrivning: "Entre meroppet med snurrhyllan och sokstationen",
+    beskrivning: "Entre meroppet med lanautomaten",
     position: [15.25, 2.6, 5.8],
     mot: [15.25, 1.0, 0.5]
   },
   scenen: {
-    beskrivning: "Scenen pa Demokratitorget fran publiken",
-    position: [12.5, 4.2, 18.5],
-    mot: [5.0, 0.8, 26.5]
+    beskrivning: "Scenen pa Demokratitorget, stolraderna och blomstallningarna, fran nordost",
+    position: [12.0, 4.4, 17.0],
+    mot: [6.5, 0.6, 24.0]
+  },
+  bordsgruppen: {
+    beskrivning: "Borden, soffan och den laga vaggen vid vastra fonstret",
+    position: [8.5, 4.0, 22.0],
+    mot: [1.2, 0.6, 16.5]
+  },
+  lovridan: {
+    beskrivning: "Lovridan och de utfallbara vaggarna, sedda fran oster",
+    position: [13.8, 3.0, 26.2],
+    mot: [5.0, 1.2, 24.8]
+  },
+  barnscen: {
+    beskrivning: "Den lilla scenen med tva steg i barnavdelningen",
+    position: [9.8, 2.8, 7.6],
+    mot: [6.8, 0.4, 3.0]
+  },
+  nodutgang: {
+    beskrivning: "Nodutgangen i norra vaggen vid faktabockerna",
+    position: [26.8, 2.6, 4.6],
+    mot: [30.6, 1.0, 0.8]
+  },
+  kulturradet: {
+    beskrivning: "Glasvaggarna och Kulturradets hylla vid Spanning",
+    position: [22.0, 3.0, 22.0],
+    mot: [27.5, 0.8, 26.0]
   },
   datorbas: {
     beskrivning: "Datorbasen bakom scenen, blickar vasterut",
@@ -98,7 +128,7 @@ export const VYER = {
     mot: [2.0, 1.2, 1.5]
   },
   mangsprak: {
-    beskrivning: "Mangsprak for barn och unga och tv-spelsskapet",
+    beskrivning: "Mangsprak for barn och unga och hyllskyltarna i barnavdelningen",
     position: [11.5, 3.2, 20.5],
     mot: [5.0, 0.8, 14.0]
   },

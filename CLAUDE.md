@@ -107,7 +107,11 @@ på plan 1.
   ytterhörn. Håll `meta` i kartfilen (noter om rummen) uppdaterad när
   något ändras.
 - Väggar med `"fonster": true` blir fönsterväggar. Sneda väggar ligger i
-  `snedvaggar` med `fran`, `till` och `tjocklek`. `"yta": "laxrosa"` ger
+  `snedvaggar` med `fran`, `till` och `tjocklek`. En sned vägg kan få
+  `"glas": true` (glasvägg), `"hojd"` (låg vägg), `"yta": "tapet"` (låg
+  vägg med mörk mönstrad tapet), `"typ": "skarm"`
+  (utfällbar skärmvägg i paneler) eller `"typ": "blomstallning"`
+  (blomlådor ovanpå varandra som en låg vägg). `"yta": "laxrosa"` ger
   en accentvägg, `"yta": "tegel"` en tegelvägg och `"yta": "skog"` en
   målad skog. Utan yta blir väggen varmvit.
 - Zoner med `"stengolv": true` får stenplattor i stället för vanligt golv,
@@ -115,6 +119,9 @@ på plan 1.
 - Hyllor med `"typ": "trag"` blir låga boktråg.
 - En zonskylt med `"y"` svävar fritt på den höjden. Utan `"y"` står den på
   den hylla i zonen som ligger närmast skyltpunkten.
+- En zon med `"golv": false` får ingen yta på golvet, bara sin skylt. Det
+  används för hyllskyltar inne i en avdelning (Manga, Lättfakta …). Låt
+  hyllorna ha zonens id i `zon`.
 - Fåtöljer kan få `"rygg": "norr" | "syd" | "ost" | "vast"`.
 - Möbeltypen `studiebas` (rader, antal, bord) ger studiebås med skärmar.
   `"skarmar": "mork"` ger mörka skärmar och `"dator": true` en dator på
@@ -126,6 +133,11 @@ på plan 1.
 - En stol med `"mot": [x, z]` vrids så att den tittar mot den punkten,
   till exempel publikstolar mot en scen.
 - Pelare med `"form": "fyrkantig"` blir fyrkantiga.
+- En `scen` med `"fond": false` blir en låg scen utan fondvägg. Möbler som
+  står på den får `"golvhojd"` (scenens höjd).
+- `sittrappa` (med `steg` och `hogMot`) är en trappa att sitta på. Med
+  `"horn"` svänger stegen runt hörnet, så att två sittrappor bildar ett L.
+  `"farg"` och `"dyna"` är namn på färger i `TEMA`.
 - En spiraltrappa med `"forstaSteg": "syd"` har sitt nedersta steg mot
   söder.
 - Föremål med `"gangbar": true` (mattor, tavlor) går att gå över eller
@@ -137,8 +149,10 @@ på plan 1.
   höjden där den börjar), `aterlamningsvagn` (svart vagn för böcker),
   `nyhetshylla` (luftig hylla med omslagen utåt), `spelskap` (fyrsidigt
   skåp med tv-spel), `trad` (träd med platt krona, `krona` är radien),
-  `matta` och `skarmvagg` (fristående vägg, `"monster": true` ger mörk
-  mönstrad tapet och `"lov": true` ett draperi av löv ovanför).
+  `matta`, `skarmvagg` (fristående vägg, `"monster": true` ger mörk
+  mönstrad tapet och `"lov": true` ett draperi av löv ovanför), `lovrida`
+  (löv på trådar från taket, utan vägg, går inte att gå igenom) och
+  `barstol` (en hög stol, `"rygg"` ger ett ryggstöd).
 - Dörrar kan ha `"skjutdorrar": true`.
 - En trappa med `"ner": true` kan delas i lopp med `fran`, `fall`,
   `vilplan`, `racke` och `nerMot`. Se trappan vid infodisken på plan 1.
@@ -232,11 +246,14 @@ Figuren börjar inne vid informationsdisken, och hjulet dyker upp framför
 disken. Ytterdörren är borttagen. Därifrån går man norrut genom gången
 förbi spiraltrappan, Du är här och anslagstavlan till Låna och lämna och
 den stora salen. I salen finns barnavdelningen i nordväst med Lilla
-skogen i hörnet och Mångspråk för barn och unga närmast dagstidningarna,
-Demokratitorget med en liten scen och fyra datorbås bakom scenväggen i
-sydväst, Hänget (ungdom) och Gråttan i mitten, Storstil och Entré
-meröppet i norr, faktaböcker och romaner i öster, och Poesi,
-Oskarshamnssamlingen och studierummen i söder.
+skogen i hörnet och en L-formad sittrappa bredvid och Mångspråk för barn och unga
+söder om den långa hyllan. Hela västra väggen är fönster, och längs den står bord. I sydväst
+ligger Demokratitorget: stolrader med blomställningar mot borden, en
+scen på en matta med tre låga tapetväggar, lövridån bakom och bakom
+ridån fyra datorbås. Hänget (ungdom) och
+Gråttan (tv-spel) ligger i mitten, Storstil och Entré meröppet i norr,
+faktaböcker och romaner i öster, och Poesi, Oskarshamnssamlingen och
+studierummen i söder. Var dagstidningarna finns är inte klart än.
 
 ## Förslag som inte är gjorda än
 
