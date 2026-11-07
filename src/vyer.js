@@ -88,9 +88,9 @@ export const VYER = {
     mot: [15.25, 1.0, 0.5]
   },
   scenen: {
-    beskrivning: "Scenen pa Demokratitorget bakom stolraderna och blomstallningarna",
-    position: [7.6, 4.4, 15.2],
-    mot: [7.6, 0.6, 24.2]
+    beskrivning: "Scenen pa Demokratitorget, stolraderna och blomstallningarna, fran nordost",
+    position: [12.0, 4.4, 17.0],
+    mot: [6.5, 0.6, 24.0]
   },
   bordsgruppen: {
     beskrivning: "Borden, soffan och den laga vaggen vid vastra fonstret",

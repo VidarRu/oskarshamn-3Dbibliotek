@@ -582,6 +582,8 @@ export const TEMA = {
   ljudvagg:      "#9aa38a",   // salviagröna skärmar runt studieplatserna
   lampa:         "#fff3dc",
   lampSken:      "#ffd89a",
+  sittrappa:     "#56604f",   // den mörkgröna sittrappan i barnavdelningen
+  sittrappaTopp: "#7f8c78",   // sittrappans ljusare, marmorerade ovansida
   vaxt:          "#6f8a5e",   // växternas blad
   vaxtLjus:      "#8ea67a",
   kruka:         "#b0705a",   // tegelröda krukor

@@ -8,7 +8,7 @@
 import * as THREE from "three";
 import { mat, rundLada, rundLadaMitt, slaIhop } from "./former.js";
 import { byggHyllor } from "./bocker.js";
-import { byggMobel, pendellampa, blomstallning } from "./mobler.js";
+import { byggMobel, pendellampa, blomstallning, tapetTextur } from "./mobler.js";
 
 export const VAGGHOJD = 3.20;
 const GOLVTJOCKLEK = 0.30;
@@ -399,7 +399,8 @@ export function forberedSnedvaggar(layout) {
 
 /**
  * En sned vagg: en rundad lada fran punkt till punkt, vriden runt lodlinjen.
- * "glas": true ger en glasvagg fran golv till tak. "hojd" ger en lag vagg.
+ * "glas": true ger en glasvagg fran golv till tak. "hojd" ger en lag vagg
+ * och "yta": "tapet" en lag vagg med den morka monstrade tapeten.
  * "typ": "skarm" ger en utfallbar skarmvagg i paneler och "typ":
  * "blomstallning" en lag vagg av blomlador ovanpa varandra.
  */
@@ -410,6 +411,7 @@ function snedvagg(s, tema) {
   const hojd = s.hojd ?? VAGGHOJD;
   let g;
   if (s.glas) g = snedGlas(langd, t, tema);
+  else if (s.yta === "tapet") g = snedTapet(langd, t, hojd, tema);
   else if (s.typ === "blomstallning") g = blomstallning(langd, t, hojd, tema, s.id);
   else if (s.typ === "skarm") g = skarmPaneler(langd, t, hojd, tema);
   else {
@@ -437,6 +439,15 @@ function snedGlas(langd, t, tema) {
       roughness: 0.1, metalness: 0.1, depthWrite: false }));
   glas.position.y = 0.14 + (VAGGHOJD - 0.34) / 2;
   g.add(glas);
+  return g;
+}
+
+/** En lag vagg med den morka monstrade tapeten och en svart overkant. */
+function snedTapet(langd, t, hojd, tema) {
+  const g = new THREE.Group();
+  const tapet = new THREE.MeshStandardMaterial({ map: tapetTextur(tema, langd, hojd), roughness: 0.9 });
+  g.add(rundLadaMitt(0, 0, langd, t, hojd, 0, tapet, 0.02));
+  g.add(rundLadaMitt(0, 0, langd + 0.02, t + 0.02, 0.03, hojd, mat(tema.automat), 0.01));
   return g;
 }
 

@@ -108,7 +108,8 @@ på plan 1.
   något ändras.
 - Väggar med `"fonster": true` blir fönsterväggar. Sneda väggar ligger i
   `snedvaggar` med `fran`, `till` och `tjocklek`. En sned vägg kan få
-  `"glas": true` (glasvägg), `"hojd"` (låg vägg), `"typ": "skarm"`
+  `"glas": true` (glasvägg), `"hojd"` (låg vägg), `"yta": "tapet"` (låg
+  vägg med mörk mönstrad tapet), `"typ": "skarm"`
   (utfällbar skärmvägg i paneler) eller `"typ": "blomstallning"`
   (blomlådor ovanpå varandra som en låg vägg). `"yta": "laxrosa"` ger
   en accentvägg, `"yta": "tegel"` en tegelvägg och `"yta": "skog"` en
@@ -134,7 +135,9 @@ på plan 1.
 - Pelare med `"form": "fyrkantig"` blir fyrkantiga.
 - En `scen` med `"fond": false` blir en låg scen utan fondvägg. Möbler som
   står på den får `"golvhojd"` (scenens höjd).
-- `sittrappa` (med `steg` och `hogMot`) är en trappa att sitta på.
+- `sittrappa` (med `steg` och `hogMot`) är en trappa att sitta på. Med
+  `"horn"` svänger stegen runt hörnet, så att två sittrappor bildar ett L.
+  `"farg"` och `"dyna"` är namn på färger i `TEMA`.
 - En spiraltrappa med `"forstaSteg": "syd"` har sitt nedersta steg mot
   söder.
 - Föremål med `"gangbar": true` (mattor, tavlor) går att gå över eller
@@ -149,7 +152,7 @@ på plan 1.
   `matta`, `skarmvagg` (fristående vägg, `"monster": true` ger mörk
   mönstrad tapet och `"lov": true` ett draperi av löv ovanför), `lovrida`
   (löv på trådar från taket, utan vägg, går inte att gå igenom) och
-  `barstol`.
+  `barstol` (en hög stol, `"rygg"` ger ett ryggstöd).
 - Dörrar kan ha `"skjutdorrar": true`.
 - En trappa med `"ner": true` kan delas i lopp med `fran`, `fall`,
   `vilplan`, `racke` och `nerMot`. Se trappan vid infodisken på plan 1.
@@ -243,10 +246,11 @@ Figuren börjar inne vid informationsdisken, och hjulet dyker upp framför
 disken. Ytterdörren är borttagen. Därifrån går man norrut genom gången
 förbi spiraltrappan, Du är här och anslagstavlan till Låna och lämna och
 den stora salen. I salen finns barnavdelningen i nordväst med Lilla
-skogen och en liten sittrappa i hörnet och Mångspråk för barn och unga
-söder om den långa hyllan. Längs västra fönstret står bord. I sydväst
-ligger Demokratitorget: stolrader bakom blomställningar, en låg scen
-och en lövridå, och bakom ridån fyra datorbås. Hänget (ungdom) och
+skogen i hörnet och en L-formad sittrappa bredvid och Mångspråk för barn och unga
+söder om den långa hyllan. Hela västra väggen är fönster, och längs den står bord. I sydväst
+ligger Demokratitorget: stolrader med blomställningar mot borden, en
+scen på en matta med tre låga tapetväggar, lövridån bakom och bakom
+ridån fyra datorbås. Hänget (ungdom) och
 Gråttan (tv-spel) ligger i mitten, Storstil och Entré meröppet i norr,
 faktaböcker och romaner i öster, och Poesi, Oskarshamnssamlingen och
 studierummen i söder. Var dagstidningarna finns är inte klart än.
