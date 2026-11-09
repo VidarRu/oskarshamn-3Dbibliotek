@@ -1451,10 +1451,10 @@ export function blomstallning(langd, tjock, hojd, t, id) {
     for (let i = 0; i < antal; i++) {
       const x = -langd / 2 + 0.08 + (i + 0.5) * (langd - 0.16) / antal;
       const sida = (slp() - 0.5) * tjock * 0.5;
-      for (let k = 0; k < 4; k++) {
-        const r = 0.035 + slp() * 0.02;
-        klot(x + (slp() - 0.5) * 0.12, y0 + lada + 0.02 + slp() * 0.09, sida + (slp() - 0.5) * 0.1,
-             r * 1.3, r * 0.6, r, blad[(i + k) % 2]);
+      for (let k = 0; k < 6; k++) {
+        const r = 0.03 + slp() * 0.022;
+        klot(x + (slp() - 0.5) * 0.12, y0 + lada + 0.02 + slp() * 0.12, sida + (slp() - 0.5) * 0.12,
+             r * 1.15, r * 0.85, r, blad[(i + k) % 2]);
       }
       if (slp() < 0.5) {
         // En ranka: blad efter blad nedat, lite at sidan for varje steg.
@@ -1463,8 +1463,8 @@ export function blomstallning(langd, tjock, hojd, t, id) {
         let rx = x, ry = y0 + lada - 0.01;
         for (let k = 0; k < langdRanka && ry > 0.08; k++) {
           rx += (slp() - 0.5) * 0.05;
-          klot(rx, ry, ut + (slp() - 0.5) * 0.03, 0.032, 0.024, 0.02, blad[k % 2]);
-          ry -= 0.045;
+          klot(rx, ry, ut + (slp() - 0.5) * 0.03, 0.03, 0.026, 0.024, blad[k % 2]);
+          ry -= 0.04;
         }
       }
     }

@@ -88,7 +88,9 @@ function hylla(h, tema, plan, bocker, grupp) {
     grupp.add(rundLada(h.x, h.z, T, GAVEL, h.hojd, 0, gavel, 0.02));
     grupp.add(rundLada(h.x, h.z + L - GAVEL, T, GAVEL, h.hojd, 0, gavel, 0.02));
   }
-  grupp.add(rundLada(h.x, h.z, h.bredd, h.djup, TAK, h.hojd - TAK, gavel, 0.025));
+  // Ovansidan ligger nagra millimeter over stommen, sa att ytorna inte flimrar.
+  grupp.add(rundLada(h.x - 0.004, h.z - 0.004, h.bredd + 0.008, h.djup + 0.008, TAK,
+                     h.hojd - TAK + 0.006, gavel, 0.025));
   grupp.add(rundLada(h.x, h.z, h.bredd, h.djup, SOCKEL, 0, vit, 0.025));
 
   const nivaer = Math.max(2, Math.round((h.hojd - SOCKEL - TAK) / 0.34));
