@@ -556,14 +556,14 @@ export const TEMA = {
   mark:          "#e5e6dc",
 
   // Golv
-  golv:          "#d6d4ce",   // ljusgrått, som kartans bakgrund
-  golvMonster:   "#c6c3bb",   // det svaga marmormönstret
+  golv:          "#c9c7c2",   // grå linoleummatta, som i fotona
+  golvMonster:   "#b9b6af",   // det svaga marmormönstret
   stengolv:      "#d9d3c4",   // plattor i entrén och utanför
   stengolvFog:   "#c4bca9",
 
   // Väggar
-  vagg:          "#f8f6f0",   // varmvitt
-  vaggKant:      "#ebe7dc",   // överkanten
+  vagg:          "#f7f6f2",   // vitt, som väggarna i fotona
+  vaggKant:      "#e8e6e0",   // överkanten
   laxrosa:       "#dccdb6",   // accentväggar, beige
   tegel:         "#c08a6c",
   tegelFog:      "#a0715a",
@@ -573,7 +573,9 @@ export const TEMA = {
   karm:          "#f5f3ec",   // fönsterkarmar
 
   // Möbler
-  hylla:         "#fbfaf6",   // vita hyllor
+  hylla:         "#fbfaf6",   // vita hyllplan
+  hyllGavel:     "#97ad93",   // salviagröna gavlar och ovansidor på hyllorna
+  hyllGavelGra:  "#858c92",   // gråa gavlar, som på Äppelhyllan
   bjork:         "#d0b997",   // träskivor, beige som borden i kartan
   automat:       "#2e2d2b",
   skarm:         "#9fb1ad",   // matt skärm
@@ -601,10 +603,9 @@ export const TEMA = {
   skogMork:      "#5f7a5c",   // vaggmalningen i Lilla skogen
   skogBakgrund:  "#cdd3bd",
 
-  // Pendellampor hänger över de här platserna (samma id som i listan ovan)
-  lampor: ["informationsdisk", "entre", "hanget", "demokratitorget", "barnavdelning",
-           "poesi", "oskarshamnssamlingen", "studierum1", "studierum2",
-           "lana_lamna"],
+  // Pendellampor hänger över de här platserna (samma id som i listan ovan).
+  // Oskarshamn har inga hängande lampor.
+  lampor: [],
 
   // Accentfärger. senap används till i-plattorna, så den ska synas, men
   // inte skrika. Här är den tegelröd, som i kartan.
@@ -614,7 +615,7 @@ export const TEMA = {
 
   // Bokryggarna dras slumpvis ur den här listan
   bocker: ["#5f7a5c", "#848c64", "#c7b29a", "#b0705a", "#6b6a66",
-           "#e3dccb", "#476949", "#9a7b5c"],
+           "#e3dccb", "#476949", "#9a7b5c", "#6f8496", "#c9a046"],
 
   // Figuren: mörkgrön tröja, så att den syns mot det ljusa golvet
   figurTroja:    "#476949",

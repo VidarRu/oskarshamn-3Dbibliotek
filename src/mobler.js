@@ -1445,17 +1445,27 @@ export function blomstallning(langd, tjock, hojd, t, id) {
     const y0 = v * steg + 0.1;
     const lada = Math.min(0.16, steg * 0.4);
     g.add(rundLadaMitt(0, 0, langd - 0.08, tjock * 0.85, lada, y0, vit, 0.03));
-    // Bladen vaxer upp ur ladan, och nagra rankor hanger ner over kanten.
-    const antal = Math.max(2, Math.round(langd / 0.18));
+    // Sma, platta blad i mjuka tuvor, och rankor av blad som hanger ner
+    // over kanten. Bladen ar sma sa att de ser mjuka ut, inte som klot.
+    const antal = Math.max(2, Math.round(langd / 0.14));
     for (let i = 0; i < antal; i++) {
-      const x = -langd / 2 + 0.1 + (i + 0.5) * (langd - 0.2) / antal;
+      const x = -langd / 2 + 0.08 + (i + 0.5) * (langd - 0.16) / antal;
       const sida = (slp() - 0.5) * tjock * 0.5;
-      const r = 0.07 + slp() * 0.03;
-      klot(x, y0 + lada + 0.04, sida, r, r, r, blad[i % 2]);
-      if (slp() < 0.45) {
+      for (let k = 0; k < 4; k++) {
+        const r = 0.035 + slp() * 0.02;
+        klot(x + (slp() - 0.5) * 0.12, y0 + lada + 0.02 + slp() * 0.09, sida + (slp() - 0.5) * 0.1,
+             r * 1.3, r * 0.6, r, blad[(i + k) % 2]);
+      }
+      if (slp() < 0.5) {
+        // En ranka: blad efter blad nedat, lite at sidan for varje steg.
         const ut = (slp() < 0.5 ? -1 : 1) * tjock * 0.45;
-        const ner = 0.12 + slp() * 0.14;
-        klot(x, y0 + lada - ner / 2, ut, 0.05, ner, 0.05, blad[(i + 1) % 2]);
+        const langdRanka = 3 + Math.floor(slp() * 4);
+        let rx = x, ry = y0 + lada - 0.01;
+        for (let k = 0; k < langdRanka && ry > 0.08; k++) {
+          rx += (slp() - 0.5) * 0.05;
+          klot(rx, ry, ut + (slp() - 0.5) * 0.03, 0.032, 0.024, 0.02, blad[k % 2]);
+          ry -= 0.045;
+        }
       }
     }
   }

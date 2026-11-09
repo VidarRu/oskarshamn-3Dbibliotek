@@ -41,6 +41,7 @@
       "Nödutgång i väggen där faktaböckerna börjar i norr, mitt emot Entré meröppet. Sökstationen vid faktaböckerna är borta. Sökstationen vid romanerna vetter mot väster.",
       "De två sneda väggarna mellan Låna och lämna och romanerna är glasväggar. Vid Spänning, närmast glasväggen, står en hylla med böcker från Kulturrådet.",
       "Studierummen har ett bord för sex i varje rum.",
+      "Soffan och det runda bordet öster om Mångspråk är borta. De finns inte på skissen och stängde gången vid Äppelhyllan.",
       "Hela västra ytterväggen är fönster, från Lilla skogen ända ner till datorbåsen. Hyllan som stod längs väggen i barnavdelningen finns inte."
     ]
   },
@@ -49,10 +50,10 @@
     "djup": 51.92
   },
   "floors": [
-    {"id": "hall_vast", "x": 0.12, "z": 0.21, "bredd": 4.99, "djup": 28.76},
+    {"id": "hall_vast", "x": 0.12, "z": 0.21, "bredd": 5.0, "djup": 28.76},
     {"id": "hall_barn", "x": 5.12, "z": 1.57, "bredd": 7.08, "djup": 27.41},
     {"id": "hall_gang", "x": 12.2, "z": 1.57, "bredd": 1.42, "djup": 31.47},
-    {"id": "hall_mitt", "x": 13.62, "z": 0.13, "bredd": 13.03, "djup": 34.77},
+    {"id": "hall_mitt", "x": 13.62, "z": 0.13, "bredd": 13.04, "djup": 34.77},
     {"id": "hall_ost", "x": 26.66, "z": 0.13, "bredd": 4.1, "djup": 27.36},
     {"id": "hall_fakta", "x": 30.75, "z": 1.63, "bredd": 7.41, "djup": 25.47},
     {"id": "hall_fakta_n", "x": 38.16, "z": 1.63, "bredd": 1.2, "djup": 11.06},
@@ -164,7 +165,7 @@
     {"id": "b10", "zon": "kapitel_yngre", "x": 13.14, "z": 7.49, "bredd": 0.51, "djup": 3.23, "hojd": 1.4},
     {"id": "b11", "zon": "kapitel_yngre", "x": 9.88, "z": 10.77, "bredd": 3.23, "djup": 0.51, "hojd": 1.4},
     {"id": "b12", "zon": "kapitel_yngre", "x": 13.14, "z": 11.27, "bredd": 0.51, "djup": 3.23, "hojd": 1.4},
-    {"id": "b13", "zon": "kapitel_mellan", "x": 8.88, "z": 14.5, "bredd": 4.25, "djup": 0.48, "hojd": 1.4},
+    {"id": "b13", "zon": "kapitel_mellan", "x": 8.88, "z": 14.5, "bredd": 4.25, "djup": 0.48, "hojd": 1.4, "gavel": "hyllGavelGra"},
     {"id": "b14", "zon": "serier_barn", "x": 1.61, "z": 12.39, "bredd": 6.87, "djup": 0.51, "hojd": 1.4},
     {"id": "b15", "zon": "mangsprak", "x": 4.81, "z": 12.91, "bredd": 0.51, "djup": 3.23, "hojd": 1.4},
     {"id": "b19", "zon": "tidskrifter", "x": 13.18, "z": 17.37, "bredd": 1.25, "djup": 1.15, "hojd": 1.1},
@@ -242,8 +243,6 @@
     {"id": "c46", "typ": "stol", "namn": "Stol", "x": 31.52, "z": 5.19, "bredd": 0.42, "djup": 0.42, "hojd": 0.85, "rygg": "ost"},
     {"id": "r1", "typ": "bord", "namn": "Runt bord", "x": 18.97, "z": 11.97, "bredd": 1.1, "djup": 1.1, "hojd": 0.5, "rund": true},
     {"id": "r1s", "typ": "soffa", "namn": "Soffa", "x": 18.64, "z": 13.54, "bredd": 1.77, "djup": 0.74, "hojd": 0.8, "rygg": "syd"},
-    {"id": "r2", "typ": "bord", "namn": "Runt bord", "x": 10.54, "z": 16.95, "bredd": 1.1, "djup": 1.1, "hojd": 0.5, "rund": true},
-    {"id": "r2s", "typ": "soffa", "namn": "Soffa", "x": 10.23, "z": 15.83, "bredd": 1.77, "djup": 0.74, "hojd": 0.8, "rygg": "norr"},
     {"id": "a2", "typ": "fatolj", "namn": "Fåtölj", "x": 38.21, "z": 10.85, "bredd": 0.77, "djup": 1.13, "hojd": 0.8, "rygg": "ost"},
     {"id": "a3", "typ": "fatolj", "namn": "Fåtölj", "x": 38.47, "z": 18.11, "bredd": 0.77, "djup": 1.13, "hojd": 0.8, "rygg": "ost"},
     {"id": "a4", "typ": "fatolj", "namn": "Fåtölj", "x": 8.79, "z": 46.83, "bredd": 1.36, "djup": 0.77, "hojd": 0.8, "rygg": "norr"},

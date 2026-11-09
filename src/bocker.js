@@ -69,6 +69,9 @@ function bokrad(slp, tema, start, langd, y0, hojdMax, lagg) {
 
 function hylla(h, tema, plan, bocker, grupp) {
   const vit = mat(tema.hylla);
+  // Gavlarna och ovansidan ar fargade, som de grona och gra hyllorna i
+  // fotona. "gavel" ar namnet pa en farg i TEMA, annars hyllGavel.
+  const gavel = mat(tema[h.gavel] || tema.hyllGavel || tema.hylla);
   const langsX = h.bredd >= h.djup;
   const L = langsX ? h.bredd : h.djup;
   const T = langsX ? h.djup : h.bredd;
@@ -78,14 +81,14 @@ function hylla(h, tema, plan, bocker, grupp) {
   const karna = T - 2 * (BOKDJUP + NISCH);
   if (langsX) {
     grupp.add(rundLada(h.x, h.z + (T - karna) / 2, L, karna, h.hojd, 0, vit, 0.02));
-    grupp.add(rundLada(h.x, h.z, GAVEL, T, h.hojd, 0, vit, 0.02));
-    grupp.add(rundLada(h.x + L - GAVEL, h.z, GAVEL, T, h.hojd, 0, vit, 0.02));
+    grupp.add(rundLada(h.x, h.z, GAVEL, T, h.hojd, 0, gavel, 0.02));
+    grupp.add(rundLada(h.x + L - GAVEL, h.z, GAVEL, T, h.hojd, 0, gavel, 0.02));
   } else {
     grupp.add(rundLada(h.x + (T - karna) / 2, h.z, karna, L, h.hojd, 0, vit, 0.02));
-    grupp.add(rundLada(h.x, h.z, T, GAVEL, h.hojd, 0, vit, 0.02));
-    grupp.add(rundLada(h.x, h.z + L - GAVEL, T, GAVEL, h.hojd, 0, vit, 0.02));
+    grupp.add(rundLada(h.x, h.z, T, GAVEL, h.hojd, 0, gavel, 0.02));
+    grupp.add(rundLada(h.x, h.z + L - GAVEL, T, GAVEL, h.hojd, 0, gavel, 0.02));
   }
-  grupp.add(rundLada(h.x, h.z, h.bredd, h.djup, TAK, h.hojd - TAK, vit, 0.025));
+  grupp.add(rundLada(h.x, h.z, h.bredd, h.djup, TAK, h.hojd - TAK, gavel, 0.025));
   grupp.add(rundLada(h.x, h.z, h.bredd, h.djup, SOCKEL, 0, vit, 0.025));
 
   const nivaer = Math.max(2, Math.round((h.hojd - SOCKEL - TAK) / 0.34));

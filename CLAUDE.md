@@ -96,6 +96,7 @@ alltid i `src/mobler.js` och `src/former.js` först.
 | `src/vagvisning.js` | Gula prickar och vägsökning, även mellan våningar |
 | `src/mobilmeny.js`, `firande.js` | Mobilläget |
 | `src/behovshjul.js` | Hjulet vid entrén |
+| `src/fastStorlek.js` | Håller rutorna lika stora när man zoomar i webbläsaren (datorläget) |
 
 En plats måste finnas både i `PLATSER` i `content.js` och som zon i rätt
 kartfil, med samma `id`. `plan: 1` i `PLATSER` betyder att platsen ligger
@@ -116,7 +117,9 @@ på plan 1.
   målad skog. Utan yta blir väggen varmvit.
 - Zoner med `"stengolv": true` får stenplattor i stället för vanligt golv,
   till exempel entré, torg och trapphall.
-- Hyllor med `"typ": "trag"` blir låga boktråg.
+- Hyllor med `"typ": "trag"` blir låga boktråg. Hyllornas gavlar och
+  ovansida får färgen `TEMA.hyllGavel`. `"gavel"` på en hylla väljer en
+  annan färg i `TEMA`, till exempel `"hyllGavelGra"`.
 - En zonskylt med `"y"` svävar fritt på den höjden. Utan `"y"` står den på
   den hylla i zonen som ligger närmast skyltpunkten.
 - En zon med `"golv": false` får ingen yta på golvet, bara sin skylt. Det
