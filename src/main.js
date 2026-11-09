@@ -9,6 +9,7 @@
 // alla texter ur src/config/content.js. Andras de foljer varlden med,
 // utan att nagon annan kod behover roras.
 
+import { hallFastStorlek } from "./fastStorlek.js";
 import * as THREE from "three";
 import { byggVarld, byggLjus, forberedSnedvaggar, VAGGHOJD } from "./varld.js";
 import { byggFigur, stegaFigur, animeraFigur, animeraFirande, FIGUR_HOJD } from "./figur.js";
@@ -126,6 +127,8 @@ const lageIAdressen = new URLSearchParams(location.search).get("lage");
 const mobilLage = !fastVy && (lageIAdressen ? lageIAdressen === "mobil"
   : window.matchMedia("(hover: none) and (pointer: coarse)").matches);
 if (mobilLage) document.body.classList.add("mobil");
+// Pa datorn ska rutorna inte vaxa och krympa nar man zoomar i webblasaren.
+else hallFastStorlek();
 
 const platser = vaningar.flatMap(v => v.platser);
 const info = vaningar.flatMap(v => v.info);

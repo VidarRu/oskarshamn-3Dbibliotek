@@ -293,6 +293,11 @@
   #meddelande.syns { display: flex; }
   #meddelande .huvud { font-size: 17px; font-weight: 800; }
   #meddelande .under { font-size: 14px; font-weight: 700; color: var(--text-mjuk); }
+  /* ------------------------------------------- fast storlek vid zoom */
+  /* src/fastStorlek.js satter --motzoom, sa att rutorna har samma
+     storlek pa skarmen hur man an zoomar i webblasaren. */
+  #hjalpknapp, #dialog, #behov, #mobil, #infokort, #forlopp, #bokjakt,
+  #meddelande, .grattis-kort { zoom: var(--motzoom, 1); }
 </style>
 </head>
 <body>
