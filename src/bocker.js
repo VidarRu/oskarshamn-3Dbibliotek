@@ -80,11 +80,12 @@ function hylla(h, tema, plan, bocker, grupp) {
   // Stommen: en karna i mitten, gavlar, tak och sockel.
   const karna = T - 2 * (BOKDJUP + NISCH);
   if (langsX) {
-    grupp.add(rundLada(h.x, h.z + (T - karna) / 2, L, karna, h.hojd, 0, vit, 0.02));
+    // Karnan slutar innanfor gavlarna, sa att ytorna inte flimrar.
+    grupp.add(rundLada(h.x + GAVEL / 2, h.z + (T - karna) / 2, L - GAVEL, karna, h.hojd, 0, vit, 0.02));
     grupp.add(rundLada(h.x, h.z, GAVEL, T, h.hojd, 0, gavel, 0.02));
     grupp.add(rundLada(h.x + L - GAVEL, h.z, GAVEL, T, h.hojd, 0, gavel, 0.02));
   } else {
-    grupp.add(rundLada(h.x + (T - karna) / 2, h.z, karna, L, h.hojd, 0, vit, 0.02));
+    grupp.add(rundLada(h.x + (T - karna) / 2, h.z + GAVEL / 2, karna, L - GAVEL, h.hojd, 0, vit, 0.02));
     grupp.add(rundLada(h.x, h.z, T, GAVEL, h.hojd, 0, gavel, 0.02));
     grupp.add(rundLada(h.x, h.z + L - GAVEL, T, GAVEL, h.hojd, 0, gavel, 0.02));
   }
